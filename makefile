@@ -16,8 +16,11 @@ check-cliff:
 	@which git-cliff >/dev/null || (echo "❌ git-cliff not found. Please install it from https://github.com/orhun/git-cliff" && exit 1)
 
 changelog: check-cliff
+ifndef VERSION
+	$(error VERSION is not set. Usage: make changelog VERSION=1.0.31)
+endif
 	@echo "📝 Generating CHANGELOG.md with git-cliff..."
-	@git-cliff -o CHANGELOG.md
+	@git-cliff --tag v$(VERSION) -o CHANGELOG.md
 
 release: changelog
 ifndef VERSION
