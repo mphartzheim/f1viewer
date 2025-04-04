@@ -1,0 +1,80 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Build Binary
+        run: |
+          mkdir -p dist
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            go build -o dist/f1viewer-windows.exe .
+          elif [[ "${{ runner.os }}" == "macOS" ]]; then
+            go build -o dist/f1viewer-macos .
+          else
+            go build -o dist/f1viewer-linux .
+          fi
+        shell: bash
+
+      - name: Zip Artifacts
+        run: |
+          cd dist
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            7z a f1viewer-windows.zip f1viewer-windows.exe
+          elif [[ "${{ runner.os }}" == "macOS" ]]; then
+            zip f1viewer-macos.zip f1viewer-macos
+          else
+            zip f1viewer-linux.zip f1viewer-linux
+          fi
+        shell: bash
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/*.zip
+          body_path: .github/release-body.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  prepare-release-body:
+    name: Build release notes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Combine RELEASENOTES.md + CHANGELOG.md
+        run: |
+          mkdir -p .github
+          echo "## 📢 Release Notes" > .github/release-body.md
+          cat RELEASENOTES.md >> .github/release-body.md
+          echo -e "\n---\n" >> .github/release-body.md
+          echo "## 📘 Changelog" >> .github/release-body.md
+          cat CHANGELOG.md >> .github/release-body.md
+
+      - name: Upload release-body artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-body
+          path: .github/release-body.md
