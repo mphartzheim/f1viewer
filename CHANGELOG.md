@@ -1,20 +1,6 @@
 # Changelog
 
 
-- chore(build): update git-cliff integration
-
-- chore(build): additional cliff changes
-
-- chore(build): still testing cliff changes
-
-- chore(build): still testing cliff
-
-- chore(build): makefile changes for release
-
-- chore: remove legacy RELEASENOTES.md
-
-
-
 - Correct icon in build script
 Correct "vv1.0.27" release title
 First makefile
@@ -28,6 +14,22 @@ First makefile
 - makefile now builds changelog and releases code
 
 - Testing automated changelogs
+
+- chore(build): update git-cliff integration
+
+- chore(build): additional cliff changes
+
+- chore(build): still testing cliff changes
+
+- chore(build): still testing cliff
+
+- chore(build): makefile changes for release
+
+- chore: remove legacy RELEASENOTES.md
+
+- docs: update changelog for v1.0.30
+
+- chore(build): makefile adjustments to check for existing tag
 
 
 
