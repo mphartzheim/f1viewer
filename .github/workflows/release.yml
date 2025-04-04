@@ -37,7 +37,7 @@ jobs:
           wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
           chmod +x appimagetool
           ./appimagetool --appimage-extract
-          sudo mv squashfs-root/AppRun /usr/local/bin/appimagetool
+          sudo mv squashfs-root/usr/bin/appimagetool /usr/local/bin/appimagetool
           sudo chmod +x /usr/local/bin/appimagetool
 
       - name: Tidy modules

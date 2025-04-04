@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.11] - 2025-04-04
+
+### Fixed
+- Corrected AppImage packaging by extracting the proper `appimagetool` binary from the AppImage archive
+- Replaced incorrect `AppRun` binary (which caused permission errors) with `squashfs-root/usr/bin/appimagetool`
+- Finalized FUSE-free AppImage generation that now builds reliably on GitHub Actions
+
+---
+
 ## [v1.0.10] - 2025-04-04
 
 ### Fixed
