@@ -4,6 +4,20 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.26] - 2025-04-04
+
+### Added
+- Initial build script (WIP)
+
+### 🐛 Fixed
+- Windows builds no longer fail due to Bash-style `if` statements in archive logic.
+- Archive creation step now split by platform to avoid shell compatibility issues.
+
+### 🧰 Internal
+- Cleaned up conditional logic in `release.yml` to ensure consistent cross-platform behavior.
+
+---
+
 ## [v1.0.25] - 2025-04-04
 
 ### 🐛 Fixed

@@ -2,3 +2,9 @@ bin/
 *.zip
 *.exe
 *.AppImage
+
+# Ignore build output files
+/build/AppDir/
+/build/*.AppImage
+/build/f1viewer*
+/build/*.tar.gz

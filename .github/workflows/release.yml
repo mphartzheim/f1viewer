@@ -72,14 +72,17 @@ jobs:
           mkdir -p dist
           go build -ldflags "-X main.version=${{ env.VERSION }}" -o dist/f1viewer${{ matrix.ext }}
 
-      - name: Archive release
+      - name: Archive (ZIP)
+        if: matrix.archive_ext == 'zip'
         run: |
           cd dist
-          if [ "${{ matrix.archive_ext }}" = "zip" ]; then
-            zip f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }} f1viewer${{ matrix.ext }}
-          else
-            tar -czf f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }} f1viewer
-          fi
+          zip f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.zip f1viewer${{ matrix.ext }}
+
+      - name: Archive (TAR.GZ)
+        if: matrix.archive_ext == 'tar.gz'
+        run: |
+          cd dist
+          tar -czf f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz f1viewer
 
       - name: Generate checksums
         run: |
