@@ -26,14 +26,13 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt update
-          sudo apt install -y libgtk-3-dev libgl1-mesa-dev xorg-dev wget
-          wget https://github.com/fyne-io/fyne/releases/latest/download/fyne-cli.zip
-          unzip fyne-cli.zip -d ~/.local/bin/
-          chmod +x ~/.local/bin/fyne
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
-          chmod +x appimagetool
-          sudo mv appimagetool /usr/local/bin/
+          sudo apt install -y libgtk-3-dev libgl1-mesa-dev xorg-dev
+
+      - name: Install Fyne CLI (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          go install fyne.io/fyne/v2/cmd/fyne@latest
+          echo "$HOME/go/bin" >> $GITHUB_PATH
 
       - name: Tidy modules
         run: go mod tidy
@@ -47,7 +46,7 @@ jobs:
             go build -o dist/f1viewer-macos .
           else
             fyne package -os linux -icon assets/tray_icon.png
-            mv *.AppImage dist/
+            mv *.AppImage dist/f1viewer-linux.AppImage
           fi
         shell: bash
 
