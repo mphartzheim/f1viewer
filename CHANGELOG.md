@@ -9,6 +9,10 @@
 
 - chore(build): still testing cliff
 
+- chore(build): makefile changes for release
+
+- chore: remove legacy RELEASENOTES.md
+
 
 
 - Correct icon in build script
