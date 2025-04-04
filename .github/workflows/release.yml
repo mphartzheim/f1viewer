@@ -112,7 +112,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: "v${{ env.VERSION }}"
-          body_path: RELEASENOTES.md
+          generate_release_notes: true
           files: |
             dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}
             dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}.sha256
