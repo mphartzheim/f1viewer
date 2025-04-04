@@ -34,7 +34,7 @@ jobs:
       - name: Install Fyne CLI (Linux only)
         if: runner.os == 'Linux'
         run: |
-          go install fyne.io/fyne/v2/cmd/fyne@latest
+          go install fyne.io/fyne/v2/cmd/fyne@v2.5.5
           echo "$HOME/go/bin" >> $GITHUB_PATH
 
       - name: Install AppImage tool (Linux only)
@@ -55,10 +55,8 @@ jobs:
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             go build -o dist/f1viewer-macos .
           else
-            fyne package -os linux -icon assets/tray_icon.png -appID com.github.mphartzheim.f1viewer -release -verbose
+            fyne package -os linux -icon assets/tray_icon.png -appID com.github.mphartzheim.f1viewer -release
             echo "Exit code: $?"
-            echo "Searching for .AppImage file:"
-            find . -name "*.AppImage"
             find . -name "*.AppImage" -exec mv {} dist/f1viewer-linux.AppImage \; || echo "AppImage not found"
           fi
           echo "Build directory contents:"

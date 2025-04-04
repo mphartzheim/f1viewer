@@ -4,6 +4,16 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.8] - 2025-04-04
+
+### Fixed
+- AppImage generation now works reliably on CI builds
+- Installed `appimagetool` in GitHub Actions to support `.AppImage` output
+- Pinned Fyne CLI to version `v2.5.5` to avoid CLI argument mismatches and silent packaging failures
+- Removed `-verbose` flag which caused `fyne package` to fail on older or mismatched versions
+
+---
+
 ## [v1.0.7] - 2025-04-04
 
 ### Changed
