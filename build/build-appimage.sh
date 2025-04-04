@@ -53,6 +53,7 @@ cp "$APPDIR/usr/share/applications/${APP}.desktop" "$APPDIR/${APP}.desktop"
 # Step 5: Add icon
 echo "🖼️  Adding icon from $ICON_SRC..."
 cp "$ICON_SRC" "$ICON_DEST"
+cp "$ICON_SRC" "$APPDIR/${APP}.png"
 
 # Step 6: Create AppRun
 echo "🚀 Creating AppRun launcher..."
