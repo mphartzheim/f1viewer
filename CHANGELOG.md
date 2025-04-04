@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.12] - 2025-04-04
+
+### Fixed
+- Installed `squashfs-tools` to support AppImage packaging via `mksquashfs`
+- Set `MKSQUASHFS` environment variable so `appimagetool` can find the system squashfs binary
+- Resolved missing file error that prevented `.AppImage` creation in GitHub Actions
+
+---
+
 ## [v1.0.11] - 2025-04-04
 
 ### Fixed
