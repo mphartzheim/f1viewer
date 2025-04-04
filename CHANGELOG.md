@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.18] - 2025-04-04
+
+### Fixed
+- Replaced extracted AppImageTool with stable CI-friendly release from TheAssassin/AppImageKit
+- Eliminated `exec: : Permission denied` and `.desktop not found` errors
+- Now using official prebuilt AppImage binary that works in GitHub Actions
+
+---
+
 ## [v1.0.17] - 2025-04-04
 
 ### Fixed
