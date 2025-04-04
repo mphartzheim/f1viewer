@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.17] - 2025-04-04
+
+### Fixed
+- Replaced broken AppImageKit source build with official prebuilt binary
+- Extracted `appimagetool-x86_64.AppImage` and used system `mksquashfs`
+- Final fix for persistent `/lib/appimagekit/mksquashfs` and CMake errors
+
+---
+
 ## [v1.0.16] - 2025-04-04
 
 ### Fixed

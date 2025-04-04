@@ -31,18 +31,17 @@ jobs:
           sudo apt update
           sudo apt install -y \
             libgtk-3-dev libgl1-mesa-dev xorg-dev \
-            squashfs-tools cmake libz-dev libfuse-dev
+            squashfs-tools
 
-      - name: Build AppImage tool from source (Linux only)
+      - name: Download and extract appimagetool (Linux only)
         if: runner.os == 'Linux'
         run: |
-          git clone https://github.com/AppImage/AppImageKit.git
-          cd AppImageKit
-          git submodule update --init --recursive
-          cmake .
-          make appimagetool
-          sudo cp ./appimagetool /usr/local/bin/
-          cd ..
+          mkdir -p tools
+          wget https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage -O tools/appimagetool
+          chmod +x tools/appimagetool
+          ./tools/appimagetool --appimage-extract
+          sudo mv squashfs-root/AppRun /usr/local/bin/appimagetool
+          sudo chmod +x /usr/local/bin/appimagetool
 
       - name: Tidy modules
         run: go mod tidy
