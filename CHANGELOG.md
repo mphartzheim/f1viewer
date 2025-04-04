@@ -4,6 +4,18 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.24] - 2025-04-04
+
+### 🐛 Fixed
+- Windows build no longer fails due to invalid Bash-style environment variable assignment.
+- Resolved cross-platform build inconsistencies by separating environment configuration per platform.
+
+### 🧰 Internal
+- Refactored `release.yml` to use `env:` blocks for platform-safe builds.
+- CGO-enabled Go builds now correctly execute across macOS, Linux, and Windows runners.
+
+---
+
 ## [v1.0.23] - 2025-04-04
 
 ### 🐛 Fixed
