@@ -293,17 +293,11 @@ func main() {
 		tabs.UpdateConstructorStandingsTab(seasonSelect.Selected, constructorStandingsContainer)
 	}
 
-	// Hook Upcoming tab: only load when the Upcoming tab is selected.
-	outerTabs.OnSelected = func(selected *container.TabItem) {
-		if selected.Text == "Upcoming" {
-			updateUpcomingTab()
-		}
-	}
-
 	// Initial load.
 	fmt.Println("Initial load:")
 	updater.LoadEndpoints(endpoints, lastHashes)
 	updateScheduleTab()
+	updateUpcomingTab()
 
 	var wg sync.WaitGroup
 	wg.Add(5) // We're launching 5 goroutines
