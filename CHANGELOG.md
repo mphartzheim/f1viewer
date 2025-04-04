@@ -4,6 +4,20 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.21] - 2025-04-04
+
+### ✨ Added
+- Native Linux packaging: `.deb` and `.rpm` builds are now generated automatically using FPM.
+- Checksums are now included for all release archives.
+
+### 🔥 Removed
+- AppImage builds. We’re sorry. You didn’t want them. We didn’t need them. They’re gone. (For now.)
+
+### 🧰 Internal
+- Updated `release.yml` to support multiplatform packaging and cleaned up legacy logic.
+
+---
+
 ## [v1.0.20] - 2025-04-04
 
 ### Fixed
