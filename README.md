@@ -1,6 +1,6 @@
 # F1Viewer 🏎️📊
 
-[![](https://img.shields.io/github/actions/workflow/status/mphartzheim/f1viewer/release.yml?branch=main&label=build)](https://github.com/mphartzheim/f1viewer/actions)
+[![](https://github.com/mphartzheim/f1viewer/actions/workflows/release.yml/badge.svg)](https://github.com/mphartzheim/f1viewer/actions)
 [![](https://img.shields.io/github/v/tag/mphartzheim/f1viewer?label=version)](https://github.com/mphartzheim/f1viewer/releases)
 [![](https://img.shields.io/badge/built%20with-Fyne-blue)](https://fyne.io)
 
