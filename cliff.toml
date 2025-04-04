@@ -1,17 +1,40 @@
 [changelog]
-header = "# Changelog"
+# Custom header so you know this config is working
+header = "# 🛠️ f1viewer changelog powered by git-cliff"
+# Always include unreleased commits
+include_unreleased = true
+# Render unreleased section as the version passed via --tag
+unreleased = "v{{version}}"
+# Trim old changelog sections if only showing one version
+trim = true
+
+# Templating for body content
 body = """
 {% if commits | length > 0 %}
+## [v{{version}}]
+
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | upper_first }}
+
 {% for commit in commits %}
-- {{ commit.message }}
+- {{ commit.message | trim }}{% if commit.body %}
+
+  {{ commit.body | indent(width=2) }}
+{% endif %}
+{% endfor %}
+
 {% endfor %}
 {% else %}
-_No commits found._
+_No changes since last release._
 {% endif %}
 """
 
 [git]
+# Enable parsing of Conventional Commits
 conventional_commits = true
-filter_unconventional = true
+# Allow non-conventional commits (for now, to test)
+filter_unconventional = false
+# Don't split multi-line commits into separate ones
 split_commits = false
-tag_pattern = "v[0-9]*"
+# Match full version tags like v1.0.32
+tag_pattern = "v[0-9]+\\.[0-9]+\\.[0-9]+"

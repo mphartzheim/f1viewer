@@ -7,6 +7,8 @@
 
 - prevent crash on empty release notes
 
+- still testing cliff changelogs
+
 
 
 - treat unreleased changes as next tag with version heading
