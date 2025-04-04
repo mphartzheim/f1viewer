@@ -2,25 +2,16 @@
 header = "# Changelog"
 body = """
 {% if commits | length > 0 %}
-{% for group, commits in commits | group_by(attribute="group") %}
-### {{ group | upper_first }}
 {% for commit in commits %}
-- {{ commit.message | trim }}{% if commit.body %}
-
-  {{ commit.body | indent(width=2) }}
-{% endif %}
-  ([{{ commit.hash | truncate(length=7, end="") }}](https://github.com/mphartzheim/f1viewer/commit/{{ commit.hash }}))
-{% endfor %}
+- {{ commit.message }}
 {% endfor %}
 {% else %}
-_No changes since last release._
+_No commits found._
 {% endif %}
 """
-trim = true
-include_unreleased = true
-unreleased = "v{{version}}"
 
 [git]
 conventional_commits = true
 filter_unconventional = true
+split_commits = false
 tag_pattern = "v[0-9]*"
