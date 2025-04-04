@@ -23,6 +23,10 @@ release: changelog
 ifndef VERSION
 	$(error VERSION is not set. Usage: make release VERSION=1.0.31)
 endif
+	@if git rev-parse "v$(VERSION)" >/dev/null 2>&1; then \
+		echo "❌ Tag v$(VERSION) already exists! Use a new version."; \
+		exit 1; \
+	fi
 	@echo "📦 Committing CHANGELOG.md..."
 	git add CHANGELOG.md
 	git commit -m "docs: update changelog for v$(VERSION)"
