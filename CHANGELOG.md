@@ -4,6 +4,17 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.23] - 2025-04-04
+
+### 🐛 Fixed
+- Linux build now correctly installs required OpenGL and X11 development headers (`libgl1-mesa-dev`, `xorg-dev`, and `pkg-config`), resolving Fyne and go-gl compilation issues.
+
+### 🧰 Internal
+- Updated `release.yml` to enable CGO and install Linux dependencies before building.
+- Improved separation of platform-specific build logic.
+
+---
+
 ## [v1.0.22] - 2025-04-04
 
 ### 🐛 Fixed

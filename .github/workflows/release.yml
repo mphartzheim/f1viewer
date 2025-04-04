@@ -44,6 +44,12 @@ jobs:
         run: |
           sudo xcode-select --switch /Applications/Xcode.app
 
+      - name: Install Linux build dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev xorg-dev pkg-config
+
       - name: Build binary (macOS)
         if: matrix.os == 'macos-latest'
         env:
@@ -56,7 +62,7 @@ jobs:
         if: matrix.os != 'macos-latest'
         run: |
           mkdir -p dist
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags "-X main.version=${{ env.VERSION }}" -o dist/f1viewer${{ matrix.ext }}
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} CGO_ENABLED=1 go build -ldflags "-X main.version=${{ env.VERSION }}" -o dist/f1viewer${{ matrix.ext }}
 
       - name: Archive release
         run: |
@@ -75,7 +81,6 @@ jobs:
       - name: Install FPM (for .deb and .rpm)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get update
           sudo apt-get install -y ruby ruby-dev build-essential rpm
           sudo gem install --no-document fpm
 
