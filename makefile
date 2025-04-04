@@ -4,7 +4,7 @@ APPIMAGE_SCRIPT = build/build-appimage.sh
 
 .PHONY: appimage clean changelog release dry-release check-cliff
 
-appimage:
+appimage: clean
 	@echo "🚀 Building AppImage..."
 	@$(APPIMAGE_SCRIPT)
 
