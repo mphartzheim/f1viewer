@@ -4,6 +4,16 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.9] - 2025-04-04
+
+### Fixed
+- Replaced `fyne package` with direct AppImage creation using `go build` and `appimagetool`
+- Added `.desktop` file and custom AppDir structure to ensure AppImage compatibility
+- Fully working `.AppImage` now built and uploaded in CI for Linux releases
+- Removed reliance on specific Fyne CLI versions to eliminate silent packaging failures
+
+---
+
 ## [v1.0.8] - 2025-04-04
 
 ### Fixed

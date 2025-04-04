@@ -6,7 +6,7 @@ on:
       - "v*.*.*"
 
 permissions:
-  contents: write  # Needed for GitHub Releases
+  contents: write
 
 jobs:
   build:
@@ -31,12 +31,6 @@ jobs:
           sudo apt update
           sudo apt install -y libgtk-3-dev libgl1-mesa-dev xorg-dev
 
-      - name: Install Fyne CLI (Linux only)
-        if: runner.os == 'Linux'
-        run: |
-          go install fyne.io/fyne/v2/cmd/fyne@v2.5.5
-          echo "$HOME/go/bin" >> $GITHUB_PATH
-
       - name: Install AppImage tool (Linux only)
         if: runner.os == 'Linux'
         run: |
@@ -55,10 +49,27 @@ jobs:
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             go build -o dist/f1viewer-macos .
           else
-            fyne package -os linux -icon assets/tray_icon.png -appID com.github.mphartzheim.f1viewer -release
-            echo "Exit code: $?"
-            find . -name "*.AppImage" -exec mv {} dist/f1viewer-linux.AppImage \; || echo "AppImage not found"
+            echo "Building for Linux (AppImage)..."
+            go build -o f1viewer-linux .
+            chmod +x f1viewer-linux
+
+            echo "Creating AppDir layout..."
+            mkdir -p AppDir/usr/bin
+            cp f1viewer-linux AppDir/usr/bin/
+            cp assets/tray_icon.png AppDir/f1viewer.png
+
+            echo "[Desktop Entry]" > AppDir/f1viewer.desktop
+            echo "Type=Application" >> AppDir/f1viewer.desktop
+            echo "Name=F1Viewer" >> AppDir/f1viewer.desktop
+            echo "Exec=f1viewer-linux" >> AppDir/f1viewer.desktop
+            echo "Icon=f1viewer" >> AppDir/f1viewer.desktop
+            echo "Categories=Utility;" >> AppDir/f1viewer.desktop
+
+            echo "Calling appimagetool..."
+            appimagetool AppDir f1viewer-linux.AppImage
+            mv f1viewer-linux.AppImage dist/
           fi
+
           echo "Build directory contents:"
           ls -lh dist/
         shell: bash
