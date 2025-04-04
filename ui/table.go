@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 
-	"f1viewer/data"
+	"github.com/mphartzheim/f1viewer/data"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"

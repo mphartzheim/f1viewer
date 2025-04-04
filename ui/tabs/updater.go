@@ -7,9 +7,9 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
-	"f1viewer/data"
-	"f1viewer/parser"
-	"f1viewer/updater"
+	"github.com/mphartzheim/f1viewer/data"
+	"github.com/mphartzheim/f1viewer/parser"
+	"github.com/mphartzheim/f1viewer/updater"
 )
 
 func buildResultsTabContent(title, circuit string, table fyne.CanvasObject) fyne.CanvasObject {

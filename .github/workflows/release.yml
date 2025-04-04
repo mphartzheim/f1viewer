@@ -37,6 +37,13 @@ jobs:
           go install fyne.io/fyne/v2/cmd/fyne@latest
           echo "$HOME/go/bin" >> $GITHUB_PATH
 
+      - name: Install AppImage tool (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          wget https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage -O appimagetool
+          chmod +x appimagetool
+          sudo mv appimagetool /usr/local/bin/
+
       - name: Tidy modules
         run: go mod tidy
 
@@ -48,9 +55,13 @@ jobs:
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             go build -o dist/f1viewer-macos .
           else
-            fyne package -os linux -icon assets/tray_icon.png -appID ca.jolpi.f1viewer -release
-            mv *.AppImage dist/f1viewer-linux.AppImage || echo "No AppImage found"
+            fyne package -os linux -icon assets/tray_icon.png -appID com.github.mphartzheim.f1viewer -release -verbose
+            echo "Exit code: $?"
+            echo "Searching for .AppImage file:"
+            find . -name "*.AppImage"
+            find . -name "*.AppImage" -exec mv {} dist/f1viewer-linux.AppImage \; || echo "AppImage not found"
           fi
+          echo "Build directory contents:"
           ls -lh dist/
         shell: bash
 

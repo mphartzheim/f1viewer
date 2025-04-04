@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.7] - 2025-04-04
+
+### Changed
+- Updated AppImage `-appID` to use GitHub project namespace: `com.github.mphartzheim.f1viewer`
+- Refactored internal module import paths to use full `github.com/mphartzheim/f1viewer/...` package names
+- Updated `go.mod` to reflect new module path for proper Go module resolution
+
+---
+
 ## [v1.0.6] - 2025-04-04
 
 ### Fixed

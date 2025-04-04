@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
-	"f1viewer/data"
+	"github.com/mphartzheim/f1viewer/data"
 )
 
 // CreateScheduleTab converts a *data.ScheduleResponse into a Fyne table widget.

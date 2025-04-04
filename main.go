@@ -13,10 +13,10 @@ import (
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/widget"
 
-	"f1viewer/data"
-	"f1viewer/parser"
-	"f1viewer/ui/tabs"
-	"f1viewer/updater"
+	"github.com/mphartzheim/f1viewer/data"
+	"github.com/mphartzheim/f1viewer/parser"
+	"github.com/mphartzheim/f1viewer/ui/tabs"
+	"github.com/mphartzheim/f1viewer/updater"
 )
 
 //go:embed assets/tray_icon.png

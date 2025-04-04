@@ -2,7 +2,8 @@ package parser
 
 import (
 	"encoding/json"
-	"f1viewer/data"
+
+	"github.com/mphartzheim/f1viewer/data"
 )
 
 // ParseScheduleResponse parses JSON data into a ScheduleResponse structure.

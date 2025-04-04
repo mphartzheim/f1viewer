@@ -1,4 +1,4 @@
-module f1viewer
+module github.com/mphartzheim/f1viewer
 
 go 1.18
 

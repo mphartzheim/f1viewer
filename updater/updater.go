@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"f1viewer/loader"
+	"github.com/mphartzheim/f1viewer/loader"
 )
 
 // Endpoint represents an API endpoint with a name, URL, and a parser function.

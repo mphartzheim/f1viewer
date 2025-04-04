@@ -7,7 +7,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
-	"f1viewer/data"
+	"github.com/mphartzheim/f1viewer/data"
 )
 
 func CreateConstructorStandingsTab(results *data.ConstructorStandingsResponse) *widget.Table {
