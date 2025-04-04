@@ -4,6 +4,17 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.25] - 2025-04-04
+
+### 🐛 Fixed
+- Resolved missing `.deb` and `.rpm` files during release upload by explicitly moving them into the `dist/` directory.
+- Fixed GitHub Release creation failure by assigning `contents: write` permissions to the workflow.
+
+### 🧰 Internal
+- Cleaned up Linux packaging logic for better consistency with archive handling.
+
+---
+
 ## [v1.0.24] - 2025-04-04
 
 ### 🐛 Fixed

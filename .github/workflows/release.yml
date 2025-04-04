@@ -5,6 +5,9 @@ on:
     tags:
       - '*'
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Build and release binaries
@@ -48,7 +51,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-dev xorg-dev pkg-config
+          sudo apt-get install -y libgl1-mesa-dev xorg-dev pkg-config ruby ruby-dev build-essential rpm
+          sudo gem install --no-document fpm
 
       - name: Build binary (macOS)
         if: matrix.os == 'macos-latest'
@@ -82,20 +86,14 @@ jobs:
           cd dist
           shasum -a 256 f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }} > f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}.sha256
 
-      - name: Install FPM (for .deb and .rpm)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get install -y ruby ruby-dev build-essential rpm
-          sudo gem install --no-document fpm
-
       - name: Build .deb and .rpm packages
         if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir -p pkg/usr/local/bin
           cp dist/f1viewer pkg/usr/local/bin/f1viewer
 
-          fpm -s dir -t deb -n f1viewer -v "${VERSION}" -a amd64 -C pkg --prefix=/
-          fpm -s dir -t rpm -n f1viewer -v "${VERSION}" -a amd64 -C pkg --prefix=/
+          fpm -s dir -t deb -n f1viewer -v "${VERSION}" -a amd64 -C pkg --prefix=/ -p dist/
+          fpm -s dir -t rpm -n f1viewer -v "${VERSION}" -a amd64 -C pkg --prefix=/ -p dist/
 
       - name: Upload release to GitHub
         uses: softprops/action-gh-release@v1
@@ -105,7 +103,7 @@ jobs:
           files: |
             dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}
             dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}.sha256
-            *.deb
-            *.rpm
+            dist/*.deb
+            dist/*.rpm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
