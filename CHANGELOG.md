@@ -6,6 +6,43 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.4] - 2025-04-04
+
+### Fixed
+- Corrected `fyne package` usage to ensure `.AppImage` generation
+- Added debug logging and fallback handling for AppImage path
+- Updated release workflow to prevent CI failures on `mv` step
+
+---
+
+## [v1.0.3] - 2025-04-04
+
+### Fixed
+- Added GitHub token permissions to allow release creation
+- Prevented `.AppImage` file matching on non-Linux runners
+
+---
+
+## [v1.0.2] - 2025-04-04
+
+### Fixed
+- Switched to proper `go install` method for Fyne CLI in Linux build
+- Replaced invalid `fyne-cli.zip` download method
+- First attempt to generate `.AppImage` for Linux
+
+---
+
+## [v1.0.1] - 2025-04-04
+
+### Added
+- Embedded tray icon using `go:embed` for Windows builds
+
+### Changed
+- Tray icon loading now uses `fyne.NewStaticResource` instead of disk path
+- Internal cleanup to prep release build compatibility
+
+---
+
 ## [v1.0.0] - 2025-04-04
 
 ### Added

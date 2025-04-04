@@ -48,8 +48,10 @@ jobs:
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             go build -o dist/f1viewer-macos .
           else
-            fyne package -os linux -icon assets/tray_icon.png
-            mv *.AppImage dist/f1viewer-linux.AppImage
+            fyne package -os linux -icon assets/tray_icon.png -appID ca.jolpi.f1viewer -release
+            ls -lh
+            mv *.AppImage dist/ || echo "No AppImage found"
+            ls -lh dist/
           fi
         shell: bash
 

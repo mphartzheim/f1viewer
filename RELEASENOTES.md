@@ -1,4 +1,4 @@
-# 🏁 f1viewer v1.0.0 – First Official Release!
+# 🏁 f1viewer v1.0.4 – First Official Release!
 
 Welcome to the first official release of **f1viewer** – a cross-platform Formula 1 viewer built in Go with Fyne.
 
