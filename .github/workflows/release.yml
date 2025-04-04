@@ -5,6 +5,9 @@ on:
     tags:
       - "v*.*.*"
 
+permissions:
+  contents: write  # Needed for GitHub Releases
+
 jobs:
   build:
     name: Build and Package for All Platforms
@@ -74,7 +77,7 @@ jobs:
         with:
           files: |
             dist/*.zip
-            dist/*.AppImage
+            ${{ runner.os == 'Linux' && 'dist/f1viewer-linux.AppImage' || '' }}
           body_path: .github/release-body.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
