@@ -5,7 +5,7 @@ trim = true
 body = """
 {% if commits | length > 0 %}
 {% for commit in commits %}
-- {{ commit.message | trim }} ([{{ commit.hash | truncate(length=7, end="") }}])
+- {{ commit.message | trim }}{% if commit.hash %} ([{{ commit.hash | truncate(length=7, end="") }}]){% endif %}
 {% endfor %}
 {% else %}
 _No changes since last release._
@@ -13,6 +13,6 @@ _No changes since last release._
 """
 
 [git]
-conventional_commits = true
-tag_pattern = "v[0-9]*"
+conventional_commits = false
 split_commits = false
+tag_pattern = "v[0-9]*"
