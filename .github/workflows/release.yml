@@ -39,7 +39,21 @@ jobs:
         with:
           go-version: '1.20'
 
-      - name: Build binary
+      - name: Set up macOS SDK (if needed)
+        if: matrix.os == 'macos-latest'
+        run: |
+          sudo xcode-select --switch /Applications/Xcode.app
+
+      - name: Build binary (macOS)
+        if: matrix.os == 'macos-latest'
+        env:
+          CGO_ENABLED: 1
+        run: |
+          mkdir -p dist
+          go build -ldflags "-X main.version=${{ env.VERSION }}" -o dist/f1viewer
+
+      - name: Build binary (Windows/Linux)
+        if: matrix.os != 'macos-latest'
         run: |
           mkdir -p dist
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags "-X main.version=${{ env.VERSION }}" -o dist/f1viewer${{ matrix.ext }}

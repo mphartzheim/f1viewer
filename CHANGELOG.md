@@ -4,6 +4,17 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.22] - 2025-04-04
+
+### 🐛 Fixed
+- macOS build now correctly enables CGO and uses the system SDK to support OpenGL dependencies (fixes build failure with `go-gl/gl`).
+- Restored macOS compatibility for Fyne-based UI builds.
+
+### 🧰 Internal
+- Adjusted `release.yml` to use native builds for macOS instead of cross-compiling.
+
+---
+
 ## [v1.0.21] - 2025-04-04
 
 ### ✨ Added
