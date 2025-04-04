@@ -111,7 +111,7 @@ jobs:
       - name: Upload release to GitHub
         uses: softprops/action-gh-release@v1
         with:
-          name: "v${{ env.VERSION }}"
+          name: "${{ env.VERSION }}"
           body_path: RELEASENOTES.md
           files: |
             dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}
