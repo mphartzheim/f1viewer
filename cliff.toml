@@ -11,7 +11,7 @@ trim = true
 # Templating for body content
 body = """
 {% if commits | length > 0 %}
-## [v{{version}}]
+## [{{version}}]
 
 {% for group, commits in commits | group_by(attribute="group") %}
 ### {{ group | upper_first }}
