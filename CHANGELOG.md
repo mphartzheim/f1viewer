@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.10] - 2025-04-04
+
+### Fixed
+- Replaced AppImage tool installation with a FUSE-free fallback to support GitHub Actions environments
+- Extracted `appimagetool` binary from `.AppImage` using `--appimage-extract`, bypassing missing `libfuse.so.2` error
+- Ensured Linux AppImage builds work reliably in CI without runtime mounting dependencies
+
+---
+
 ## [v1.0.9] - 2025-04-04
 
 ### Fixed
