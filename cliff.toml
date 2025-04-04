@@ -4,7 +4,7 @@ header = "# 🛠️ f1viewer changelog powered by git-cliff"
 # Always include unreleased commits
 include_unreleased = true
 # Render unreleased section as the version passed via --tag
-unreleased = "v{{version}}"
+unreleased = "{{version}}"
 # Trim old changelog sections if only showing one version
 trim = true
 

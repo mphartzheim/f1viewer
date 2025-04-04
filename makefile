@@ -17,21 +17,21 @@ check-cliff:
 
 changelog: check-cliff
 ifndef VERSION
-	$(error VERSION is not set. Usage: make changelog VERSION=1.0.31)
+	$(error VERSION is not set. Usage: make changelog VERSION=1.0.32)
 endif
 	@echo "📝 Generating CHANGELOG.md with git-cliff..."
-	@git-cliff --tag v$(VERSION) -o CHANGELOG.md
+	@git-cliff --tag v$(VERSION) -o CHANGELOG.md -c cliff.toml
 
 release: changelog
 ifndef VERSION
-	$(error VERSION is not set. Usage: make release VERSION=1.0.31)
+	$(error VERSION is not set. Usage: make release VERSION=1.0.32)
 endif
 	@if git rev-parse "v$(VERSION)" >/dev/null 2>&1; then \
 		echo "❌ Tag v$(VERSION) already exists! Use a new version."; \
 		exit 1; \
 	fi
 	@echo "📝 Extracting latest release notes to RELEASENOTES.md..."
-	@awk '/^## \[v[0-9]+\.[0-9]+\.[0-9]+\]/ { if (found) exit; found=1 } found { print }' CHANGELOG.md > RELEASENOTES.md
+	@sed -n "/^## \\[v$(VERSION)\\]/,/^## \\[/p" CHANGELOG.md | sed '$d' > RELEASENOTES.md
 	@echo "📦 Committing CHANGELOG.md and RELEASENOTES.md..."
 	git add CHANGELOG.md RELEASENOTES.md
 	git commit -m "docs: update changelog for v$(VERSION)"
@@ -42,10 +42,10 @@ endif
 
 dry-release: changelog
 ifndef VERSION
-	$(error VERSION is not set. Usage: make dry-release VERSION=1.0.31)
+	$(error VERSION is not set. Usage: make dry-release VERSION=1.0.32)
 endif
 	@echo "🧪 Generating RELEASENOTES.md preview for v$(VERSION)..."
-	@awk '/^## \[v[0-9]+\.[0-9]+\.[0-9]+\]/ { if (found) exit; found=1 } found { print }' CHANGELOG.md > RELEASENOTES.md
+	@sed -n "/^## \\[v$(VERSION)\\]/,/^## \\[/p" CHANGELOG.md | sed '$d' > RELEASENOTES.md
 	@echo ""
 	@echo "📝 Preview of RELEASENOTES.md:"
 	@echo "-----------------------------"
