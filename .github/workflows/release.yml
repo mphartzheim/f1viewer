@@ -38,10 +38,12 @@ jobs:
         run: |
           git clone https://github.com/AppImage/AppImageKit.git
           cd AppImageKit
+          git submodule update --init --recursive
+          cd src
           cmake .
           make appimagetool
           sudo cp ./appimagetool /usr/local/bin/
-          cd ..
+          cd ../..
 
       - name: Tidy modules
         run: go mod tidy
@@ -70,7 +72,7 @@ jobs:
             echo "Icon=f1viewer" >> AppDir/f1viewer.desktop
             echo "Categories=Utility;" >> AppDir/f1viewer.desktop
 
-            echo "Calling locally built appimagetool..."
+            echo "Calling appimagetool..."
             appimagetool AppDir f1viewer-linux.AppImage
             mv f1viewer-linux.AppImage dist/
           fi

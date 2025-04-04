@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.15] - 2025-04-04
+
+### Fixed
+- Corrected build failure due to missing `CMakeLists.txt` in AppImageKit root
+- Now properly builds `appimagetool` from `AppImageKit/src` with submodules initialized
+- Fully functional AppImage generation with no FUSE or squashfs errors remaining
+
+---
+
 ## [v1.0.14] - 2025-04-04
 
 ### Fixed
