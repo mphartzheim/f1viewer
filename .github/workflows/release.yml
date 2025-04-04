@@ -72,7 +72,7 @@ jobs:
             appimagetool AppDir f1viewer-linux.AppImage
             mv f1viewer-linux.AppImage dist/
           fi
-
+ 
           echo "Build directory contents:"
           ls -lh dist/
         shell: bash

@@ -4,6 +4,16 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.13] - 2025-04-04
+
+### Fixed
+- Resolved `mksquashfs` not found error during Linux AppImage build
+- Added `squashfs-tools` to GitHub Actions runner to provide `mksquashfs`
+- Explicitly exported `MKSQUASHFS` environment variable so `appimagetool` could locate it
+- Finalized fully working AppImage pipeline for Linux releases
+
+---
+
 ## [v1.0.12] - 2025-04-04
 
 ### Fixed
