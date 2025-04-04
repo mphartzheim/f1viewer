@@ -62,15 +62,25 @@ jobs:
           mkdir -p dist
           go build -ldflags "-X main.version=${{ env.VERSION }}" -o dist/f1viewer
 
-      - name: Build binary (Windows/Linux)
-        if: matrix.os != 'macos-latest'
+      - name: Build binary (Windows)
+        if: matrix.os == 'windows-latest'
         env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
+          GOOS: windows
+          GOARCH: amd64
           CGO_ENABLED: 1
         run: |
           mkdir -p dist
-          go build -ldflags "-X main.version=${{ env.VERSION }}" -o dist/f1viewer${{ matrix.ext }}
+          go build -ldflags "-H=windowsgui -X main.version=${{ env.VERSION }}" -o dist/f1viewer.exe
+
+      - name: Build binary (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          GOOS: linux
+          GOARCH: amd64
+          CGO_ENABLED: 1
+        run: |
+          mkdir -p dist
+          go build -ldflags "-X main.version=${{ env.VERSION }}" -o dist/f1viewer
 
       - name: Archive (ZIP)
         if: matrix.archive_ext == 'zip'
@@ -101,7 +111,7 @@ jobs:
       - name: Upload release to GitHub
         uses: softprops/action-gh-release@v1
         with:
-          name: "${{ env.VERSION }}"
+          name: "v${{ env.VERSION }}"
           body_path: RELEASENOTES.md
           files: |
             dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}

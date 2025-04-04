@@ -1,17 +1,16 @@
-# 🏁 f1viewer v1.0.27 – First Official Release!
+## f1viewer v1.0.29
 
-Welcome to the first official release of **f1viewer** – a cross-platform Formula 1 viewer built in Go with Fyne.
+This release includes polish and stability improvements across the board.
 
-## 🚀 What’s Included
+### 🧼 Cleanup
+- Finalized build scripts and release configuration for consistent, cross-platform packaging.
+- Ensured correct icon and desktop integration for AppImage builds.
 
-- View the full 2025 F1 race schedule
-- See real-time driver & constructor standings
-- Drill into qualifying, sprint, and race results
-- System tray support with hide/show + quit
-- Local time conversion for all sessions
-- Lightweight, native UI that works on Linux, Windows, and macOS
+### ✅ Reliability
+- Verified successful GitHub Release workflow for macOS, Linux, and Windows targets.
+- Improved visibility and packaging accuracy in release artifacts.
 
-This is just the beginning – thank you for joining the grid! 🏎️💨
+Thanks for sticking with us while we made it all run smoothly.
 
 ---
 

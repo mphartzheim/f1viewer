@@ -4,6 +4,16 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.28] - 2025-04-04
+
+### 🎉 Improved
+- Windows build now runs as a proper GUI app with no terminal window popup by setting `-ldflags=-H=windowsgui`.
+
+### 🧰 Internal
+- Build script updated to use the correct linker flags for Windows GUI mode.
+
+---
+
 ## [v1.0.27] - 2025-04-04
 
 ### 🐛 Fixed
