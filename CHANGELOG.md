@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.16] - 2025-04-04
+
+### Fixed
+- Corrected AppImageKit build path by removing incorrect `cd src`
+- `cmake` now runs from project root, matching updated AppImageKit structure
+- AppImage builds now fully functional with no path, cmake, or FUSE errors
+
+---
+
 ## [v1.0.15] - 2025-04-04
 
 ### Fixed

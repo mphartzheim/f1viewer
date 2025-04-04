@@ -39,11 +39,10 @@ jobs:
           git clone https://github.com/AppImage/AppImageKit.git
           cd AppImageKit
           git submodule update --init --recursive
-          cd src
           cmake .
           make appimagetool
           sudo cp ./appimagetool /usr/local/bin/
-          cd ../..
+          cd ..
 
       - name: Tidy modules
         run: go mod tidy
