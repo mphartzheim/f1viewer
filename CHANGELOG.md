@@ -1,6 +1,12 @@
 # Changelog
 
 
+- ci: use CHANGELOG.md as GitHub release body
+chore(makefile): add dry-release preview and RELEASENOTES.md generation
+chore(cliff): include multi-line commit bodies in changelog output
+
+
+
 - Correct icon in build script
 Correct "vv1.0.27" release title
 First makefile
@@ -30,6 +36,8 @@ First makefile
 - docs: update changelog for v1.0.30
 
 - chore(build): makefile adjustments to check for existing tag
+
+- docs: update changelog for v1.0.30
 
 
 

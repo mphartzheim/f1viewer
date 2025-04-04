@@ -1,6 +1,7 @@
 [changelog]
 header = "# Changelog"
 include_unreleased = true
+unreleased = "v{{version}}"
 trim = true
 body = """
 {% if commits | length > 0 %}
@@ -17,8 +18,7 @@ _No changes since last release._
 {% endif %}
 """
 
-
 [git]
-conventional_commits = false
+conventional_commits = true
 split_commits = false
 tag_pattern = "v[0-9]*"
