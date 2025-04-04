@@ -101,11 +101,11 @@ func main() {
 				if success {
 					break
 				}
-				println("[F1Tray] Attempt", i+1, "to set system tray icon failed. Retrying...")
+				println("[F1Viewer] Attempt", i+1, "to set system tray icon failed. Retrying...")
 				time.Sleep(2 * time.Second)
 			}
 			if !success {
-				println("[F1Tray] Failed to set system tray icon after 5 attempts. Exiting.")
+				println("[F1Viewer] Failed to set system tray icon after 5 attempts. Exiting.")
 				fyne.CurrentApp().Quit()
 				return
 			}
