@@ -23,6 +23,8 @@
 
 - correct RELEASENOTES.md extraction using sed instead of awk
 
+- prevent double 'v' in version headings
+
 
 
 
