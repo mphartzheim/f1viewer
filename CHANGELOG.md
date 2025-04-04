@@ -1,159 +1,27 @@
 # Changelog
 
 
-- ci: use CHANGELOG.md as GitHub release body
-chore(makefile): add dry-release preview and RELEASENOTES.md generation
-chore(cliff): include multi-line commit bodies in changelog output
+- treat unreleased changes as next tag with version heading
 
+- fix double v in release notes (again)
 
 
-- Correct icon in build script
-Correct "vv1.0.27" release title
-First makefile
 
-- Correct build badge on readme
+- update git-cliff integration
 
-- Suppress Windows terminal popup by using -H=windowsgui linker flag
+- additional cliff changes
 
-- Testing out automated release notes
+- still testing cliff changes
 
-- makefile now builds changelog and releases code
+- still testing cliff
 
-- Testing automated changelogs
+- makefile changes for release
 
-- chore(build): update git-cliff integration
+- remove legacy RELEASENOTES.md
 
-- chore(build): additional cliff changes
+- update changelog for v1.0.30
 
-- chore(build): still testing cliff changes
+- makefile adjustments to check for existing tag
 
-- chore(build): still testing cliff
-
-- chore(build): makefile changes for release
-
-- chore: remove legacy RELEASENOTES.md
-
-- docs: update changelog for v1.0.30
-
-- chore(build): makefile adjustments to check for existing tag
-
-- docs: update changelog for v1.0.30
-
-
-
-- Build script adjustments
-Use Compress-Archive for Windows builds and fix AppImage desktop file location
-
-
-
-- Early support for build script
-Resolve Windows runner archive step with platform-safe logic
-
-
-
-- Upload .deb/.rpm artifacts and enable GitHub release permissions
-
-
-
-- Make Go build cross-platform safe by correcting env var handling
-
-
-
-- Install OpenGL/X11 build dependencies for Linux release
-
-
-
-- Restore macOS build by enabling CGO and system SDK support
-
-
-
-- Replaced AppImage with .deb and .rpm builds for Linux
-
-
-
-- Install fyne tool in GitHub Actions for AppImage packaging
-
-
-
-- Fix AppImage build using Fyne package method
-
-
-
-- Fix AppImage build with working CI binary from TheAssassin/AppImageKit
-
-
-
-- Fix Linux AppImage build using extracted official appimagetool binary
-
-
-
-- Fix AppImageKit cmake step: run cmake from repo root
-
-
-
-- Fix AppImageKit build step: use src dir and initialize submodules
-
-
-
-- Fix AppImage packaging: build appimagetool from source and use system mksquashfs
-
-
-
-- Fix AppImage build: install squashfs-tools and export MKSQUASHFS
-
-
-
-- Fix AppImage build: add squashfs-tools and MKSQUASHFS path for packaging
-
-
-
-- Fix AppImage tool: use correct extracted binary to avoid exec permission errors
-
-
-
-- Fix AppImage build: use extracted appimagetool to avoid FUSE dependency
-
-
-
-- Replace fyne package with manual AppImage generation using appimagetool
-
-
-
-- Fix AppImage build with pinned Fyne CLI and proper toolchain
-
-
-
-- Update AppImage AppID to use GitHub namespace
-Use github imports for project
-
-
-
-- Fix AppImage upload by splitting release steps per platform
-
-
-
-- Fix Windows mkdir, add AppImage renaming and artifact debug output
-
-
-
-- Fix AppImage packaging: add appID, release flag, and debug output
-
-
-
-- Add AppImage build and fix release permissions
-
-
-
-- Fix Fyne CLI install and AppImage support
-
-
-
-- Fix release.yml: add Linux deps and simplify jobs
-
-- AppImage support in release actions
-Embeds for Windows tray icon
-
-
-
-- Initial commit for f1viewer
+- update changelog for v1.0.30
 
