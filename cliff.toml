@@ -1,6 +1,7 @@
 [changelog]
 header = "# Changelog"
 include_unreleased = true
+trim = true
 body = """
 {% if commits | length > 0 %}
 {% for commit in commits %}
@@ -10,7 +11,6 @@ body = """
 _No changes since last release._
 {% endif %}
 """
-trim = true
 
 [git]
 conventional_commits = true
