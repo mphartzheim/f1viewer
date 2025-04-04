@@ -5,12 +5,18 @@ trim = true
 body = """
 {% if commits | length > 0 %}
 {% for commit in commits %}
-- {{ commit.message | trim }}{% if commit.hash %} ([{{ commit.hash | truncate(length=7, end="") }}]){% endif %}
+- {{ commit.message | trim }}{% if commit.body %}
+
+  {{ commit.body | indent(width=2) }}
+{% endif %}{% if commit.hash %}
+  ([{{ commit.hash | truncate(length=7, end="") }}](https://github.com/mphartzheim/f1viewer/commit/{{ commit.hash }}))
+{% endif %}
 {% endfor %}
 {% else %}
 _No changes since last release._
 {% endif %}
 """
+
 
 [git]
 conventional_commits = false

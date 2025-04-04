@@ -70,7 +70,7 @@ jobs:
           CGO_ENABLED: 1
         run: |
           mkdir -p dist
-          go build -ldflags "-H=windowsgui -X main.version=${{ env.VERSION }}" -o dist/f1viewer.exe
+          go build -ldflags="-H=windowsgui -X main.version=${{ env.VERSION }}" -o dist/f1viewer.exe
 
       - name: Build binary (Linux)
         if: matrix.os == 'ubuntu-latest'
@@ -112,7 +112,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: "v${{ env.VERSION }}"
-          generate_release_notes: true
+          body_path: RELEASENOTES.md
           files: |
             dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}
             dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.archive_ext }}.sha256

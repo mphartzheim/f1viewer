@@ -2,7 +2,7 @@
 
 APPIMAGE_SCRIPT = build/build-appimage.sh
 
-.PHONY: appimage clean changelog release check-cliff
+.PHONY: appimage clean changelog release dry-release check-cliff
 
 appimage:
 	@echo "🚀 Building AppImage..."
@@ -27,10 +27,25 @@ endif
 		echo "❌ Tag v$(VERSION) already exists! Use a new version."; \
 		exit 1; \
 	fi
-	@echo "📦 Committing CHANGELOG.md..."
-	git add CHANGELOG.md
+	@echo "📝 Extracting latest release notes to RELEASENOTES.md..."
+	@awk '/^## \[v[0-9]+\.[0-9]+\.[0-9]+\]/ { if (found) exit; found=1 } found { print }' CHANGELOG.md > RELEASENOTES.md
+	@echo "📦 Committing CHANGELOG.md and RELEASENOTES.md..."
+	git add CHANGELOG.md RELEASENOTES.md
 	git commit -m "docs: update changelog for v$(VERSION)"
 	@echo "🏷️  Tagging release v$(VERSION)..."
 	git tag -a v$(VERSION) -m "Release v$(VERSION)"
 	git push origin main
 	git push origin v$(VERSION)
+
+dry-release: changelog
+ifndef VERSION
+	$(error VERSION is not set. Usage: make dry-release VERSION=1.0.31)
+endif
+	@echo "🧪 Generating RELEASENOTES.md preview for v$(VERSION)..."
+	@awk '/^## \[v[0-9]+\.[0-9]+\.[0-9]+\]/ { if (found) exit; found=1 } found { print }' CHANGELOG.md > RELEASENOTES.md
+	@echo ""
+	@echo "📝 Preview of RELEASENOTES.md:"
+	@echo "-----------------------------"
+	@cat RELEASENOTES.md
+	@echo "-----------------------------"
+	@echo "✅ If this looks good, run: make release VERSION=$(VERSION)"
