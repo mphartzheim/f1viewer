@@ -3,6 +3,7 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"runtime"
 	"strconv"
 	"sync"
 	"time"
@@ -87,7 +88,30 @@ func main() {
 	if desktopApp, ok := a.(desktop.App); ok {
 		// Load embedded tray icon
 		icon := fyne.NewStaticResource("tray_icon.png", trayIconBytes)
-		desktopApp.SetSystemTrayIcon(icon)
+		maxAttempts := 5
+		success := false
+
+		if runtime.GOOS == "windows" {
+			for i := 0; i < maxAttempts; i++ {
+				func() {
+					defer func() { recover() }()
+					desktopApp.SetSystemTrayIcon(icon)
+					success = true
+				}()
+				if success {
+					break
+				}
+				println("[F1Tray] Attempt", i+1, "to set system tray icon failed. Retrying...")
+				time.Sleep(2 * time.Second)
+			}
+			if !success {
+				println("[F1Tray] Failed to set system tray icon after 5 attempts. Exiting.")
+				fyne.CurrentApp().Quit()
+				return
+			}
+		} else {
+			desktopApp.SetSystemTrayIcon(icon)
+		}
 
 		// Tray menu with show/hide and quit
 		trayMenu := fyne.NewMenu("F1 Viewer",
