@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.6] - 2025-04-04
+
+### Fixed
+- AppImage file was not appearing in GitHub Releases despite successful builds; upload is now handled in a dedicated Linux-only release step
+- Release assets are now uploaded per platform (Windows, macOS, Linux) to prevent conditional expression issues
+- Improved debug output with `ls dist/` to verify built files before upload
+
+---
+
 ## [v1.0.5] - 2025-04-04
 
 ### Fixed

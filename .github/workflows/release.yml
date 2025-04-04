@@ -74,12 +74,29 @@ jobs:
           cat CHANGELOG.md >> .github/release-body.md
         shell: bash
 
-      - name: Upload release assets
+      - name: Upload release (Windows)
+        if: runner.os == 'Windows'
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            dist/*.zip
-            ${{ runner.os == 'Linux' && 'dist/f1viewer-linux.AppImage' || '' }}
+          files: dist/f1viewer-windows.zip
+          body_path: .github/release-body.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release (macOS)
+        if: runner.os == 'macOS'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/f1viewer-macos.zip
+          body_path: .github/release-body.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload release (Linux)
+        if: runner.os == 'Linux'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/f1viewer-linux.AppImage
           body_path: .github/release-body.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
