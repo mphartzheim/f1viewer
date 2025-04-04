@@ -4,6 +4,14 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.19] - 2025-04-04
+
+### Fixed
+- Switched to FUSE method using `fyne package` for Linux AppImage generation
+- Ensured `libfuse-dev` and `squashfs-tools` are installed for GitHub Actions builds
+
+---
+
 ## [v1.0.18] - 2025-04-04
 
 ### Fixed
