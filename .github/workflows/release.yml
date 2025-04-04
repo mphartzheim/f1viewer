@@ -29,16 +29,19 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt update
-          sudo apt install -y libgtk-3-dev libgl1-mesa-dev xorg-dev squashfs-tools
+          sudo apt install -y \
+            libgtk-3-dev libgl1-mesa-dev xorg-dev \
+            squashfs-tools cmake libz-dev libfuse-dev
 
-      - name: Install FUSE-free AppImage tool (Linux only)
+      - name: Build AppImage tool from source (Linux only)
         if: runner.os == 'Linux'
         run: |
-          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
-          chmod +x appimagetool
-          ./appimagetool --appimage-extract
-          sudo mv squashfs-root/usr/bin/appimagetool /usr/local/bin/appimagetool
-          sudo chmod +x /usr/local/bin/appimagetool
+          git clone https://github.com/AppImage/AppImageKit.git
+          cd AppImageKit
+          cmake .
+          make appimagetool
+          sudo cp ./appimagetool /usr/local/bin/
+          cd ..
 
       - name: Tidy modules
         run: go mod tidy
@@ -67,12 +70,11 @@ jobs:
             echo "Icon=f1viewer" >> AppDir/f1viewer.desktop
             echo "Categories=Utility;" >> AppDir/f1viewer.desktop
 
-            echo "Calling appimagetool..."
-            export MKSQUASHFS=$(which mksquashfs)
+            echo "Calling locally built appimagetool..."
             appimagetool AppDir f1viewer-linux.AppImage
             mv f1viewer-linux.AppImage dist/
           fi
- 
+
           echo "Build directory contents:"
           ls -lh dist/
         shell: bash

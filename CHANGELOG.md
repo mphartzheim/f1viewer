@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.14] - 2025-04-04
+
+### Fixed
+- Replaced AppImageTool binary with source-built version to avoid hardcoded FUSE/mksquashfs path issues
+- Eliminated `/usr/local/bin/../lib/appimagekit/mksquashfs` error by fully controlling the toolchain
+- Now using system squashfs and bypassing all AppImageKit self-contained assumptions
+
+---
+
 ## [v1.0.13] - 2025-04-04
 
 ### Fixed
