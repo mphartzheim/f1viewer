@@ -26,12 +26,19 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt update
-          sudo apt install -y xorg-dev libgl1-mesa-dev
+          sudo apt install -y libgtk-3-dev libgl1-mesa-dev xorg-dev wget
+          wget https://github.com/fyne-io/fyne/releases/latest/download/fyne-cli.zip
+          unzip fyne-cli.zip -d ~/.local/bin/
+          chmod +x ~/.local/bin/fyne
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
+          chmod +x appimagetool
+          sudo mv appimagetool /usr/local/bin/
 
       - name: Tidy modules
         run: go mod tidy
 
-      - name: Build binary
+      - name: Build application
         run: |
           mkdir -p dist
           if [[ "${{ runner.os }}" == "Windows" ]]; then
@@ -39,7 +46,8 @@ jobs:
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             go build -o dist/f1viewer-macos .
           else
-            go build -o dist/f1viewer-linux .
+            fyne package -os linux -icon assets/tray_icon.png
+            mv *.AppImage dist/
           fi
         shell: bash
 
@@ -50,8 +58,6 @@ jobs:
             7z a f1viewer-windows.zip f1viewer-windows.exe
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             zip f1viewer-macos.zip f1viewer-macos
-          else
-            zip f1viewer-linux.zip f1viewer-linux
           fi
         shell: bash
 
@@ -64,11 +70,12 @@ jobs:
           echo "## 📘 Changelog" >> .github/release-body.md
           cat CHANGELOG.md >> .github/release-body.md
 
-      - name: Upload binaries to GitHub Release
+      - name: Upload release assets
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*.zip
+          files: |
+            dist/*.zip
+            dist/*.AppImage
           body_path: .github/release-body.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        

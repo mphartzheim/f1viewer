@@ -1,8 +1,8 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
-	"log"
 	"strconv"
 	"sync"
 	"time"
@@ -18,6 +18,9 @@ import (
 	"f1viewer/ui/tabs"
 	"f1viewer/updater"
 )
+
+//go:embed assets/tray_icon.png
+var trayIconBytes []byte
 
 func main() {
 	// Define endpoints.
@@ -82,11 +85,8 @@ func main() {
 
 	// Tray icon support (only works on desktop platforms)
 	if desktopApp, ok := a.(desktop.App); ok {
-		// Load tray icon
-		icon, err := fyne.LoadResourceFromPath("assets/tray_icon.png")
-		if err != nil {
-			log.Println("Failed to load tray icon, using fallback:", err)
-		}
+		// Load embedded tray icon
+		icon := fyne.NewStaticResource("tray_icon.png", trayIconBytes)
 		desktopApp.SetSystemTrayIcon(icon)
 
 		// Tray menu with show/hide and quit
