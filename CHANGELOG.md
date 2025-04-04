@@ -1,8 +1,16 @@
-# 📘 Changelog
-
 All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org).
+
+---
+
+## [v1.0.5] - 2025-04-04
+
+### Fixed
+- Resolved a workflow failure on Windows caused by `mkdir -p` by switching to a shell-compatible `if` check
+- Ensured `.AppImage` is correctly renamed and moved into the `dist/` folder
+- Added debug logging to confirm artifact generation during builds
+- Improved cross-platform compatibility of the GitHub Actions release process
 
 ---
 

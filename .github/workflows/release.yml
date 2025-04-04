@@ -49,10 +49,9 @@ jobs:
             go build -o dist/f1viewer-macos .
           else
             fyne package -os linux -icon assets/tray_icon.png -appID ca.jolpi.f1viewer -release
-            ls -lh
-            mv *.AppImage dist/ || echo "No AppImage found"
-            ls -lh dist/
+            mv *.AppImage dist/f1viewer-linux.AppImage || echo "No AppImage found"
           fi
+          ls -lh dist/
         shell: bash
 
       - name: Zip binaries
@@ -67,12 +66,13 @@ jobs:
 
       - name: Prepare GitHub Release body
         run: |
-          mkdir -p .github
+          if [ ! -d .github ]; then mkdir .github; fi
           echo "## 📢 Release Notes" > .github/release-body.md
           cat RELEASENOTES.md >> .github/release-body.md
           echo -e "\n---\n" >> .github/release-body.md
           echo "## 📘 Changelog" >> .github/release-body.md
           cat CHANGELOG.md >> .github/release-body.md
+        shell: bash
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v1
