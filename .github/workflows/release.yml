@@ -74,9 +74,9 @@ jobs:
 
       - name: Archive (ZIP)
         if: matrix.archive_ext == 'zip'
+        shell: pwsh
         run: |
-          cd dist
-          zip f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.zip f1viewer${{ matrix.ext }}
+          Compress-Archive -Path "dist/f1viewer${{ matrix.ext }}" -DestinationPath "dist/f1viewer-${{ matrix.goos }}-${{ matrix.goarch }}.zip"
 
       - name: Archive (TAR.GZ)
         if: matrix.archive_ext == 'tar.gz'

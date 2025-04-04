@@ -7,6 +7,9 @@ ARCH="x86_64"
 OUT_DIR="build"
 APPDIR="$OUT_DIR/AppDir"
 
+ICON_SRC="assets/tray_icon.png"
+ICON_DEST="$APPDIR/usr/share/icons/hicolor/256x256/apps/${APP}.png"
+
 echo "🔧 Building AppImage for $APP version $VERSION"
 
 # Step 1: Check for dependencies
@@ -29,7 +32,7 @@ echo "📁 Preparing AppDir structure..."
 rm -rf "$APPDIR"
 mkdir -p "$APPDIR/usr/bin"
 mkdir -p "$APPDIR/usr/share/applications"
-mkdir -p "$APPDIR/usr/share/icons/hicolor/256x256/apps"
+mkdir -p "$(dirname "$ICON_DEST")"
 
 # Step 3: Build the binary
 echo "🔨 Building binary..."
@@ -45,10 +48,11 @@ Icon=$APP
 Type=Application
 Categories=Utility;
 EOF
+cp "$APPDIR/usr/share/applications/${APP}.desktop" "$APPDIR/${APP}.desktop"
 
-# Step 5: Add icon (adjust path if needed)
-echo "🖼️  Adding icon..."
-cp assets/icon.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/${APP}.png"
+# Step 5: Add icon
+echo "🖼️  Adding icon from $ICON_SRC..."
+cp "$ICON_SRC" "$ICON_DEST"
 
 # Step 6: Create AppRun
 echo "🚀 Creating AppRun launcher..."

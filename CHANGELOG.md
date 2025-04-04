@@ -4,6 +4,18 @@ This project adheres to [Semantic Versioning](https://semver.org).
 
 ---
 
+## [v1.0.27] - 2025-04-04
+
+### 🐛 Fixed
+- Replaced Bash-based `zip` logic with native PowerShell `Compress-Archive` on Windows, fixing build failures.
+- AppImage `.desktop` file is now correctly copied to AppDir root for compatibility with `appimagetool`.
+- Tweaked build script to copy desktop file properly
+
+### 🧰 Internal
+- Streamlined cross-platform archive creation using per-platform shell-safe logic.
+
+---
+
 ## [v1.0.26] - 2025-04-04
 
 ### Added
