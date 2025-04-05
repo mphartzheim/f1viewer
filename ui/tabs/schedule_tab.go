@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
 	"github.com/mphartzheim/f1viewer/data"
@@ -58,19 +60,28 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 
 			// Race row
 			race := races[id.Row-1]
+			isNext := id.Row-1 == nextIndex
+			primaryColor := theme.PrimaryColor()
+
 			switch id.Col {
 			case 0:
 				roundLabel := race.Round
-				if id.Row-1 == nextIndex {
+				if isNext {
 					roundLabel += " (next)"
 				}
-				updateCell(widget.NewLabelWithStyle(roundLabel, fyne.TextAlignLeading, fyne.TextStyle{Bold: false}))
+				text := canvas.NewText(roundLabel, nil)
+				if isNext {
+					text.Color = primaryColor
+				}
+				text.TextStyle = fyne.TextStyle{}
+				text.Alignment = fyne.TextAlignLeading
+				updateCell(text)
+
 			case 1:
-				// Race name + finished flag logic
 				u, err := url.Parse(race.URL)
-				var raceHyperlink fyne.CanvasObject
+				var raceCell fyne.CanvasObject
 				if err == nil && u != nil {
-					hl := widget.NewHyperlink(race.RaceName, u)
+					hl := widget.NewHyperlink(race.RaceName, u) // keep default styling
 					var extra fyne.CanvasObject
 					if race.Date != "" && race.Time != "" {
 						fullTimeStr := fmt.Sprintf("%sT%s", race.Date, race.Time)
@@ -86,22 +97,32 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 					} else {
 						extra = widget.NewLabel("\u200B")
 					}
-					raceHyperlink = container.NewHBox(hl, extra)
+					raceCell = container.NewHBox(hl, extra)
 				} else {
-					raceHyperlink = widget.NewLabel(race.RaceName)
+					text := canvas.NewText(race.RaceName, nil)
+					if isNext {
+						text.Color = primaryColor
+					}
+					text.Alignment = fyne.TextAlignLeading
+					raceCell = text
 				}
-				updateCell(raceHyperlink)
+				updateCell(raceCell)
+
 			case 2:
-				// Circuit with optional map button
 				u, err := url.Parse(race.Circuit.URL)
-				var circuitHyperlink fyne.CanvasObject
+				var circuitCell fyne.CanvasObject
 				if err == nil && u != nil {
-					circuitHyperlink = widget.NewHyperlink(race.Circuit.CircuitName, u)
+					circuitCell = widget.NewHyperlink(race.Circuit.CircuitName, u) // no color override
 				} else {
-					circuitHyperlink = widget.NewLabel(race.Circuit.CircuitName)
+					text := canvas.NewText(race.Circuit.CircuitName, nil)
+					if isNext {
+						text.Color = primaryColor
+					}
+					text.Alignment = fyne.TextAlignLeading
+					circuitCell = text
 				}
 
-				items := []fyne.CanvasObject{circuitHyperlink}
+				items := []fyne.CanvasObject{circuitCell}
 				lat := race.Circuit.Location.Lat
 				lon := race.Circuit.Location.Long
 				if lat != "" && lon != "" {
@@ -116,14 +137,29 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 					}
 				}
 				updateCell(container.NewHBox(items...))
+
 			case 3:
 				loc := race.Circuit.Location
-				updateCell(widget.NewLabel(fmt.Sprintf("%s, %s", loc.Locality, loc.Country)))
+				label := fmt.Sprintf("%s, %s", loc.Locality, loc.Country)
+				text := canvas.NewText(label, nil)
+				if isNext {
+					text.Color = primaryColor
+				}
+				text.Alignment = fyne.TextAlignLeading
+				updateCell(text)
+
 			case 4:
-				updateCell(widget.NewLabel(race.Date))
+				text := canvas.NewText(race.Date, nil)
+				if isNext {
+					text.Color = primaryColor
+				}
+				text.Alignment = fyne.TextAlignLeading
+				updateCell(text)
+
 			default:
 				updateCell(widget.NewLabel(""))
 			}
+
 		},
 	)
 
