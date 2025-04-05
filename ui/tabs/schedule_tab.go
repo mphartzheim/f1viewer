@@ -189,7 +189,7 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 	table.SetColumnWidth(0, 70)  // Round
 	table.SetColumnWidth(1, 280) // Race
 	table.SetColumnWidth(2, 280) // Circuit
-	table.SetColumnWidth(3, 280) // Location
+	table.SetColumnWidth(3, 200) // Location
 	table.SetColumnWidth(4, 120) // Date
 	table.Resize(fyne.NewSize(820, float32((len(races)+1)*30)))
 
