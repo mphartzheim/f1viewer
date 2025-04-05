@@ -90,8 +90,8 @@ func main() {
 	lastHashes := make(map[string]string)
 
 	// Create the Fyne app and main window.
-	a := app.NewWithID("ca.jolpi.f1viewer")
-	w := a.NewWindow("f1viewer UI")
+	a := app.NewWithID("com.github.mphartzheim.f1viewer")
+	w := a.NewWindow("F1 Viewer")
 
 	// Set the initial theme.
 	if themeName, err := prefs.Theme.Get(); err == nil {
