@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/sha256"
 	_ "embed"
 	"fmt"
 	"runtime"
@@ -404,27 +405,39 @@ func main() {
 	wg.Add(6)
 	go func() {
 		defer wg.Done()
-		tabs.UpdateRaceResultsTab(seasonSelect.Selected, "last", raceResultsContainer)
+		updateTabIfChanged("Race Results", endpoints[4], raceResultsContainer, lastHashes, func(_ any) {
+			tabs.UpdateRaceResultsTab(seasonSelect.Selected, "last", raceResultsContainer)
+		})
 	}()
 	go func() {
 		defer wg.Done()
-		tabs.UpdateQualifyingResultsTab(seasonSelect.Selected, "last", qualifyingContainer)
+		updateTabIfChanged("Qualifying", endpoints[5], qualifyingContainer, lastHashes, func(_ any) {
+			tabs.UpdateQualifyingResultsTab(seasonSelect.Selected, "last", qualifyingContainer)
+		})
 	}()
 	go func() {
 		defer wg.Done()
-		tabs.UpdateSprintResultsTab(seasonSelect.Selected, "last", sprintResultsContainer)
+		updateTabIfChanged("Sprint Results", endpoints[6], sprintResultsContainer, lastHashes, func(_ any) {
+			tabs.UpdateSprintResultsTab(seasonSelect.Selected, "last", sprintResultsContainer)
+		})
 	}()
 	go func() {
 		defer wg.Done()
-		tabs.UpdateDriverStandingsTab(seasonSelect.Selected, driverStandingsContainer)
+		updateTabIfChanged("Driver Standings", endpoints[2], driverStandingsContainer, lastHashes, func(_ any) {
+			tabs.UpdateDriverStandingsTab(seasonSelect.Selected, driverStandingsContainer)
+		})
 	}()
 	go func() {
 		defer wg.Done()
-		tabs.UpdateConstructorStandingsTab(seasonSelect.Selected, constructorStandingsContainer)
+		updateTabIfChanged("Constructor Standings", endpoints[3], constructorStandingsContainer, lastHashes, func(_ any) {
+			tabs.UpdateConstructorStandingsTab(seasonSelect.Selected, constructorStandingsContainer)
+		})
 	}()
 	go func() {
 		defer wg.Done()
-		updateUpcomingTab()
+		updateTabIfChanged("Upcoming", endpoints[1], upcomingContainer, lastHashes, func(_ any) {
+			updateUpcomingTab()
+		})
 	}()
 	wg.Wait()
 
@@ -501,4 +514,42 @@ func generateYears() []string {
 		years = append(years, strconv.Itoa(y))
 	}
 	return years
+}
+
+// Helper: hash a byte slice as a hex string.
+func hashBytes(data []byte) string {
+	h := sha256.Sum256(data)
+	return fmt.Sprintf("%x", h[:])
+}
+
+var loadedOnce = make(map[string]bool)
+
+// Helper: only update the tab container if the hash of the data has changed
+// OR if this is the first time we've loaded this tab since app start.
+func updateTabIfChanged(
+	name string,
+	ep updater.Endpoint,
+	container *fyne.Container,
+	lastHashes map[string]string,
+	updateFn func(any),
+) {
+	result := updater.FetchEndpoint(ep)
+	if result.Err != nil {
+		fmt.Printf("%s endpoint error: %v\n", name, result.Err)
+		return
+	}
+
+	hash := result.Hash
+	_, loaded := loadedOnce[name]
+	if lastHash, ok := lastHashes[name]; ok && lastHash == hash && loaded {
+		fmt.Printf("%s tab is up-to-date (hash matched). Skipping update.\n", name)
+		return
+	}
+
+	// Mark this tab as loaded at least once
+	loadedOnce[name] = true
+	lastHashes[name] = hash
+
+	updateFn(result.Data)
+	container.Refresh()
 }

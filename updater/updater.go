@@ -14,16 +14,17 @@ import (
 type Endpoint struct {
 	Name  string
 	URL   string
-	Parse func([]byte) (interface{}, error)
+	Parse func([]byte) (any, error)
 }
 
 // EndpointResult holds the outcome of fetching an endpoint.
 type EndpointResult struct {
 	Name     string
-	Data     interface{}
+	Data     any
 	Err      error
 	Duration time.Duration
 	Hash     string
+	Raw      []byte
 }
 
 // FetchEndpoint retrieves, hashes, and parses the data from an endpoint.
@@ -46,6 +47,7 @@ func FetchEndpoint(ep Endpoint) EndpointResult {
 		Err:      err,
 		Duration: duration,
 		Hash:     hashString,
+		Raw:      raw,
 	}
 }
 
