@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/sha256"
 	_ "embed"
 	"fmt"
 	"runtime"
@@ -514,12 +513,6 @@ func generateYears() []string {
 		years = append(years, strconv.Itoa(y))
 	}
 	return years
-}
-
-// Helper: hash a byte slice as a hex string.
-func hashBytes(data []byte) string {
-	h := sha256.Sum256(data)
-	return fmt.Sprintf("%x", h[:])
 }
 
 var loadedOnce = make(map[string]bool)
