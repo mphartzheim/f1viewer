@@ -81,16 +81,20 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 				u, err := url.Parse(race.URL)
 				var raceCell fyne.CanvasObject
 				if err == nil && u != nil {
-					hl := widget.NewHyperlink(race.RaceName, u) // keep default styling
+					hl := widget.NewHyperlink(race.RaceName, u) // keep default hyperlink styling
 					var extra fyne.CanvasObject
-					if race.Date != "" && race.Time != "" {
+					if isNext {
+						extra = widget.NewButton("Spoilers", func() {
+							onFlagClicked(race.Round)
+						})
+						extra.(*widget.Button).Importance = widget.LowImportance
+					} else if race.Date != "" && race.Time != "" {
 						fullTimeStr := fmt.Sprintf("%sT%s", race.Date, race.Time)
 						if t, err := time.Parse(time.RFC3339, fullTimeStr); err == nil && t.Before(now) {
-							flagButton := widget.NewButton("🏁", func() {
+							extra = widget.NewButton("🏁", func() {
 								onFlagClicked(race.Round)
 							})
-							flagButton.Importance = widget.LowImportance
-							extra = flagButton
+							extra.(*widget.Button).Importance = widget.LowImportance
 						} else {
 							extra = widget.NewLabel("\u200B")
 						}
@@ -99,12 +103,18 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 					}
 					raceCell = container.NewHBox(hl, extra)
 				} else {
+					// Fallback: if URL parsing fails, show plain text and add Spoilers button if next race
 					text := canvas.NewText(race.RaceName, nil)
-					if isNext {
-						text.Color = primaryColor
-					}
 					text.Alignment = fyne.TextAlignLeading
-					raceCell = text
+					if isNext {
+						spoilersButton := widget.NewButton("Spoilers", func() {
+							onFlagClicked(race.Round)
+						})
+						spoilersButton.Importance = widget.LowImportance
+						raceCell = container.NewHBox(text, spoilersButton)
+					} else {
+						raceCell = text
+					}
 				}
 				updateCell(raceCell)
 
