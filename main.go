@@ -242,7 +242,7 @@ func main() {
 
 	content := container.NewBorder(topRow, nil, nil, nil, outerTabs)
 	w.SetContent(content)
-	w.Resize(fyne.NewSize(1280, 1024))
+	w.Resize(fyne.NewSize(1280, 720))
 	w.SetFixedSize(true)
 
 	// onFlagClicked callback.
