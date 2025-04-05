@@ -34,4 +34,13 @@ const (
 
 	// MapBaseURL is the base OpenStreetMap URL used for race location links.
 	MapBaseURL = "https://www.openstreetmap.org/"
+
+	// WeatherBaseURL is the Open-meteo URL used for race forecasts.
+	WeatherBaseURL = "https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f&hourly=temperature_2m,weathercode&timezone=UTC&start_date=%s&end_date=%s"
+
+	// OpenmeteoURL is the URL for Open-meteo.
+	OpenmeteoURL = "https://open-meteo.com/"
+
+	// WindyBaseURL is the Windy URL used for race forecasts.
+	WindyBaseURL = "https://www.windy.com/-Radar+-radarPlus?radarPlus,%.4f,%.4f,%d"
 )

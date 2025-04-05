@@ -3,11 +3,14 @@ package tabs
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 
 	"github.com/mphartzheim/f1viewer/data"
@@ -57,8 +60,46 @@ func CreateUpcomingTab(upcoming *data.UpcomingResponse) *widget.Table {
 
 	rows = append(rows, sessionRow{"Race", race.Date, race.Time})
 
+	// Get track lat/lon
+	latStr := race.Circuit.Location.Lat
+	lonStr := race.Circuit.Location.Long
+
+	lat, err := strconv.ParseFloat(latStr, 64)
+	if err != nil {
+		fmt.Println("Invalid latitude:", latStr)
+		lat = 0
+	}
+	lon, err := strconv.ParseFloat(lonStr, 64)
+	if err != nil {
+		fmt.Println("Invalid longitude:", lonStr)
+		lon = 0
+	}
+
+	// Fetch forecast data
+	var forecasts []string
+	for _, row := range rows {
+		fullTimeStr := fmt.Sprintf("%sT%s", row.Date, row.Time)
+		t, err := time.Parse(time.RFC3339, fullTimeStr)
+		if err != nil {
+			forecasts = append(forecasts, "Invalid time")
+			continue
+		}
+
+		forecast, err := data.GetForecastForTime(lat, lon, t)
+		if err != nil {
+			forecasts = append(forecasts, "No data")
+		} else {
+			forecasts = append(forecasts, forecast)
+		}
+	}
+	zoom := 15 // example zoom level (range is roughly 0–20; higher is more zoomed in)
+	forecastURL, _ := url.Parse(fmt.Sprintf(data.WindyBaseURL, lat, lon, zoom))
+
 	rowCount := len(rows) + 1
-	colCount := 3
+	colCount := 4
+
+	var showLiveBtn binding.Bool = binding.NewBool()
+	showLiveBtn.Set(false)
 
 	table := widget.NewTable(
 		func() (int, int) { return rowCount, colCount },
@@ -71,23 +112,37 @@ func CreateUpcomingTab(upcoming *data.UpcomingResponse) *widget.Table {
 				return
 			}
 
+			// Header row
 			if id.Row == 0 {
-				headers := []string{"Session", "Date", "Time"}
-				cont.Objects = []fyne.CanvasObject{widget.NewLabel(headers[id.Col])}
+				headers := []string{"Session", "Forecast", "Date", "Time"}
+				if id.Col < len(headers) {
+					cont.Objects = []fyne.CanvasObject{widget.NewLabel(headers[id.Col])}
+					cont.Refresh()
+				}
+				return
+			}
+
+			// Row safety check
+			if id.Row-1 >= len(rows) {
+				cont.Objects = []fyne.CanvasObject{widget.NewLabel("N/A")}
 				cont.Refresh()
 				return
 			}
 
 			row := rows[id.Row-1]
-			var display fyne.CanvasObject
+			var forecast string
+			if id.Row-1 < len(forecasts) {
+				forecast = forecasts[id.Row-1]
+			} else {
+				forecast = "N/A"
+			}
 
-			// Attempt to parse and convert to local time
 			fullTimeStr := fmt.Sprintf("%sT%s", row.Date, row.Time)
 			t, err := time.Parse(time.RFC3339, fullTimeStr)
 			useLocal, _ := userprefs.Get().UseLocalTime.Get()
 			localTime := t.Local()
-			localDateStr := row.Date // fallback
-			localTimeStr := row.Time // fallback
+			localDateStr := row.Date
+			localTimeStr := row.Time
 			if err == nil {
 				if useLocal {
 					localDateStr = localTime.Format("2006-01-02")
@@ -98,25 +153,45 @@ func CreateUpcomingTab(upcoming *data.UpcomingResponse) *widget.Table {
 				}
 			}
 
+			var display fyne.CanvasObject
+
 			switch id.Col {
 			case 0:
 				display = widget.NewLabel(row.Session)
 			case 1:
-				display = widget.NewLabel(localDateStr)
+				forecastBox := container.NewHBox()
+				btn := widget.NewButton(forecast, func() {
+					_ = fyne.CurrentApp().OpenURL(forecastURL)
+				})
+				btn.Importance = widget.HighImportance
+				forecastBox.Add(btn)
+				display = forecastBox
 			case 2:
+				display = widget.NewLabel(localDateStr)
+			case 3:
 				timeLabel := widget.NewLabel(localTimeStr)
-				objects := []fyne.CanvasObject{timeLabel}
-				now := time.Now()
-				if isSessionActive(row.Date, row.Time, row.Session, now) {
-					if u, err := url.Parse(data.F1tvURL); err == nil {
-						button := widget.NewButton("🔴 Live", func() {
-							_ = fyne.CurrentApp().OpenURL(u)
-						})
-						button.Importance = widget.HighImportance
-						objects = append(objects, button)
-					}
-				}
-				display = container.NewHBox(objects...)
+				liveButtonContainer := container.NewHBox()
+
+				// Only one listener per row (no memory leak risk)
+				go func() {
+					showLiveBtn.AddListener(binding.NewDataListener(func() {
+						liveButtonContainer.Objects = nil
+						if v, err := showLiveBtn.Get(); err == nil && v {
+							if isSessionActive(row.Date, row.Time, row.Session, time.Now()) {
+								if u, err := url.Parse(data.F1tvURL); err == nil {
+									btn := widget.NewButton("🔴 Live", func() {
+										_ = fyne.CurrentApp().OpenURL(u)
+									})
+									btn.Importance = widget.HighImportance
+									liveButtonContainer.Objects = append(liveButtonContainer.Objects, btn)
+								}
+							}
+						}
+						liveButtonContainer.Refresh()
+					}))
+				}()
+
+				display = container.NewHBox(timeLabel, layout.NewSpacer(), liveButtonContainer)
 			}
 
 			cont.Objects = []fyne.CanvasObject{display}
@@ -124,10 +199,11 @@ func CreateUpcomingTab(upcoming *data.UpcomingResponse) *widget.Table {
 		},
 	)
 
-	table.SetColumnWidth(0, 120)
-	table.SetColumnWidth(1, 120)
-	table.SetColumnWidth(2, 160)
-	table.Resize(fyne.NewSize(400, float32(rowCount*30)))
+	table.SetColumnWidth(0, 120) // Session
+	table.SetColumnWidth(1, 120) // Forecast
+	table.SetColumnWidth(2, 100) // Date
+	table.SetColumnWidth(3, 160) // Time
+	table.Resize(fyne.NewSize(520, float32(rowCount*30)))
 	return table
 }
 

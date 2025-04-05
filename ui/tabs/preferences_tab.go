@@ -33,6 +33,7 @@ func CreatePreferencesTab() fyne.CanvasObject {
 
 	// Create toggle checkboxes with bindings for persistence.
 	clockCheck := widget.NewCheckWithData("Use 24-Hour Clock", prefs.Use24hClock)
+	tempUnitCheck := widget.NewCheckWithData("Use Fahrenheit", prefs.UseFahrenheit)
 	localTimeCheck := widget.NewCheckWithData("Display Local Time", prefs.UseLocalTime)
 	hideOnCloseCheck := widget.NewCheckWithData("Hide on Close", prefs.HideOnClose)
 	startHiddenCheck := widget.NewCheckWithData("Start Hidden", prefs.StartHidden)
@@ -42,6 +43,7 @@ func CreatePreferencesTab() fyne.CanvasObject {
 		Items: []*widget.FormItem{
 			{Text: "Theme", Widget: themeContainer},
 			{Text: "Clock", Widget: clockCheck},
+			{Text: "Temperature Unit", Widget: tempUnitCheck}, // 🔥 inserted here
 			{Text: "Display Time", Widget: localTimeCheck},
 			{Text: "Close Behavior", Widget: hideOnCloseCheck},
 			{Text: "Start Behavior", Widget: startHiddenCheck},

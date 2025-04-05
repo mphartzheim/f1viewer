@@ -8,11 +8,12 @@ import (
 
 // UserPrefs holds the persistent user settings.
 type UserPrefs struct {
-	Theme        binding.String // e.g., "System", "Dark", "Light", etc.
-	Use24hClock  binding.Bool   // Toggle for 24-hour clock display.
-	UseLocalTime binding.Bool   // Toggle for local vs. actual/event time.
-	HideOnClose  binding.Bool   // Determines whether to hide or quit on close.
-	StartHidden  binding.Bool   // Whether the app starts hidden.
+	Theme         binding.String // e.g., "System", "Dark", "Light", etc.
+	Use24hClock   binding.Bool   // Toggle for 24-hour clock display.
+	UseLocalTime  binding.Bool   // Toggle for local vs. actual/event time.
+	HideOnClose   binding.Bool   // Determines whether to hide or quit on close.
+	StartHidden   binding.Bool   // Whether the app starts hidden.
+	UseFahrenheit binding.Bool   // Toggle between °C and °F
 }
 
 var prefs *UserPrefs
@@ -25,11 +26,12 @@ func Init() {
 	storage := app.NewWithID("f1viewer").Preferences()
 
 	prefs = &UserPrefs{
-		Theme:        binding.NewString(),
-		Use24hClock:  binding.NewBool(),
-		UseLocalTime: binding.NewBool(),
-		HideOnClose:  binding.NewBool(),
-		StartHidden:  binding.NewBool(),
+		Theme:         binding.NewString(),
+		Use24hClock:   binding.NewBool(),
+		UseLocalTime:  binding.NewBool(),
+		HideOnClose:   binding.NewBool(),
+		StartHidden:   binding.NewBool(),
+		UseFahrenheit: binding.NewBool(),
 	}
 
 	// Helper functions to load or initialize values.
@@ -50,6 +52,7 @@ func Init() {
 	prefs.UseLocalTime.Set(loadBool("use_local_time", false))
 	prefs.HideOnClose.Set(loadBool("hide_on_close", true))
 	prefs.StartHidden.Set(loadBool("start_hidden", false))
+	prefs.UseFahrenheit.Set(loadBool("use_fahrenheit", false))
 
 	// Auto-persist changes to each setting.
 	bindString(storage, "theme", prefs.Theme)
@@ -57,6 +60,7 @@ func Init() {
 	bindBool(storage, "use_local_time", prefs.UseLocalTime)
 	bindBool(storage, "hide_on_close", prefs.HideOnClose)
 	bindBool(storage, "start_hidden", prefs.StartHidden)
+	bindBool(storage, "use_fahrenheit", prefs.UseFahrenheit)
 }
 
 // Get returns the UserPrefs instance for use in your app.

@@ -3,6 +3,7 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"net/url"
 	"runtime"
 	"strconv"
 	"strings"
@@ -291,7 +292,7 @@ func main() {
 		}
 
 		upcomingData, ok := result.Data.(*data.UpcomingResponse)
-		data.SetUpcomingCached(upcomingData) // ✅ cache for reactive refreshes
+		data.SetUpcomingCached(upcomingData)
 		if !ok {
 			fmt.Println("Failed to cast upcoming data")
 			upcomingContainer.Objects = []fyne.CanvasObject{widget.NewLabel("No upcoming race data found.")}
@@ -315,7 +316,7 @@ func main() {
 		race := races[0]
 		fmt.Printf("Next race: %s\n", race.RaceName)
 
-		now := time.Now().Local() // ✅ FIX: ensure local timezone matches parsed session times
+		now := time.Now().Local()
 		fmt.Printf("Local time now: %s\n", now)
 
 		var candidates []struct {
@@ -370,9 +371,12 @@ func main() {
 			fmt.Println("No future sessions found.")
 		}
 
-		header := widget.NewLabelWithStyle(
-			fmt.Sprintf("Upcoming: %s at %s", race.RaceName, race.Circuit.CircuitName),
-			fyne.TextAlignLeading, fyne.TextStyle{},
+		u, _ := url.Parse(data.OpenmeteoURL)
+		header := container.NewHBox(
+			widget.NewLabel(fmt.Sprintf("Upcoming: %s at %s", race.RaceName, race.Circuit.CircuitName)),
+			layout.NewSpacer(),
+			widget.NewLabel("Forecast provided by:"),
+			widget.NewHyperlink("Open-meteo", u),
 		)
 		table := tabs.CreateUpcomingTab(upcomingData)
 		upcomingContainer.Objects = []fyne.CanvasObject{container.NewBorder(header, nil, nil, nil, table)}
@@ -468,11 +472,13 @@ func main() {
 		if upcomingData != nil {
 			table := tabs.CreateUpcomingTab(upcomingData)
 
-			header := widget.NewLabelWithStyle(
-				fmt.Sprintf("Upcoming: %s at %s", upcomingData.MRData.RaceTable.Races[0].RaceName, upcomingData.MRData.RaceTable.Races[0].Circuit.CircuitName),
-				fyne.TextAlignLeading, fyne.TextStyle{},
+			u, _ := url.Parse(data.OpenmeteoURL)
+			header := container.NewHBox(
+				widget.NewLabel(fmt.Sprintf("Upcoming: %s at %s", upcomingData.MRData.RaceTable.Races[0].RaceName, upcomingData.MRData.RaceTable.Races[0].Circuit.CircuitName)),
+				layout.NewSpacer(),
+				widget.NewLabel("Forecast provided by:"),
+				widget.NewHyperlink("Open-meteo", u),
 			)
-
 			upcomingContainer.Objects = []fyne.CanvasObject{container.NewBorder(header, nil, nil, nil, table)}
 			w.Canvas().Refresh(upcomingContainer)
 			upcomingContainer.Refresh()
