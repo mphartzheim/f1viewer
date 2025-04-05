@@ -397,7 +397,7 @@ func main() {
 	}
 
 	fmt.Println("Initial load:")
-	updater.LoadEndpoints(endpoints, lastHashes)
+	/* updater.LoadEndpoints(endpoints, lastHashes) */
 	updateScheduleTab()
 
 	var wg sync.WaitGroup
