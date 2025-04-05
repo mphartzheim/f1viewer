@@ -278,6 +278,7 @@ func main() {
 	updateUpcomingTab := func() {
 		ep := endpoints[1]
 		ep.URL = fmt.Sprintf(data.UpcomingURL, strconv.Itoa(time.Now().Year()))
+		fmt.Printf("Fetching upcoming data from: %s\n", ep.URL)
 
 		result := updater.FetchEndpoint(ep)
 		if result.Err != nil {
@@ -301,6 +302,7 @@ func main() {
 
 		races := upcomingData.MRData.RaceTable.Races
 		if len(races) == 0 {
+			fmt.Println("No races in upcoming data")
 			upcomingContainer.Objects = []fyne.CanvasObject{widget.NewLabel("No upcoming races available.")}
 			nextSession = time.Time{}
 			nextRaceName, nextSessionName = "", ""
@@ -310,7 +312,11 @@ func main() {
 		}
 
 		race := races[0]
-		now := time.Now()
+		fmt.Printf("Next race: %s\n", race.RaceName)
+
+		now := time.Now().Local() // ✅ FIX: ensure local timezone matches parsed session times
+		fmt.Printf("Local time now: %s\n", now)
+
 		var candidates []struct {
 			name string
 			t    time.Time
@@ -322,6 +328,7 @@ func main() {
 					name string
 					t    time.Time
 				}{n, t})
+				fmt.Printf("Parsed %s session time: %s\n", name, t)
 			} else {
 				fmt.Printf("Failed to parse %s time: %v\n", name, err)
 			}
@@ -342,9 +349,11 @@ func main() {
 		bestDiff := time.Duration(1<<63 - 1)
 		for _, cand := range candidates {
 			if cand.t.After(now) {
-				if diff := cand.t.Sub(now); diff < bestDiff {
-					bestDiff = diff
+				diff := cand.t.Sub(now)
+				fmt.Printf("Candidate session: %s at %s (in %v)\n", cand.name, cand.t, diff)
+				if diff < bestDiff {
 					nextCandidate = &cand
+					break
 				}
 			}
 		}
@@ -353,9 +362,11 @@ func main() {
 			nextSession = nextCandidate.t
 			nextSessionName = nextCandidate.name
 			nextRaceName = race.RaceName
+			fmt.Printf("Next session selected: %s at %s\n", nextSessionName, nextSession)
 		} else {
 			nextSession = time.Time{}
 			nextRaceName, nextSessionName = race.RaceName, ""
+			fmt.Println("No future sessions found.")
 		}
 
 		header := widget.NewLabelWithStyle(
