@@ -1,12 +1,12 @@
 package tabs
 
 import (
-	"github.com/mphartzheim/f1viewer/themes"
-	"github.com/mphartzheim/f1viewer/userprefs"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+
+	"github.com/mphartzheim/f1viewer/themes"
+	"github.com/mphartzheim/f1viewer/userprefs"
 )
 
 // CreatePreferencesTab builds the Preferences tab UI. It allows users to
