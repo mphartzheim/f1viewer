@@ -100,13 +100,9 @@ func UpdateSprintResultsTab(season, round string, sprintContainer *fyne.Containe
 			}
 		}
 	}
-	header := widget.NewLabelWithStyle(
-		fmt.Sprintf("Sprint Results for %s at %s", raceName, circuitName),
-		fyne.TextAlignLeading,
-		fyne.TextStyle{Bold: false},
-	)
-	body := widget.NewLabel("Not a Sprint Race event.")
-	sprintContainer.Objects = []fyne.CanvasObject{container.NewBorder(header, nil, nil, nil, body)}
+	sprintContainer.Objects = []fyne.CanvasObject{
+		widget.NewLabel("Not a Sprint Race event."),
+	}
 	sprintContainer.Refresh()
 }
 
