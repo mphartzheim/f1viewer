@@ -48,8 +48,5 @@ func CreatePreferencesTab() fyne.CanvasObject {
 		},
 	}
 
-	// Add a header for the tab.
-	header := widget.NewLabelWithStyle("Preferences", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
-
-	return container.NewVBox(header, form)
+	return container.NewVBox(form)
 }
