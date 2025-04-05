@@ -19,8 +19,10 @@ import (
 
 	"github.com/mphartzheim/f1viewer/data"
 	"github.com/mphartzheim/f1viewer/parser"
+	"github.com/mphartzheim/f1viewer/themes"
 	"github.com/mphartzheim/f1viewer/ui/tabs"
 	"github.com/mphartzheim/f1viewer/updater"
+	"github.com/mphartzheim/f1viewer/userprefs"
 )
 
 //go:embed assets/tray_icon.png
@@ -80,12 +82,32 @@ func main() {
 		},
 	}
 
+	// Initialize user preferences.
+	userprefs.Init()
+	prefs := userprefs.Get()
+
 	// Map to store last hashes.
 	lastHashes := make(map[string]string)
 
 	// Create the Fyne app and main window.
 	a := app.NewWithID("ca.jolpi.f1viewer")
 	w := a.NewWindow("f1viewer UI")
+
+	// Set the initial theme.
+	if themeName, err := prefs.Theme.Get(); err == nil {
+		if newTheme, ok := themes.AvailableThemes()[themeName]; ok {
+			a.Settings().SetTheme(newTheme)
+		}
+	}
+
+	// Listen for changes to the theme preference.
+	prefs.Theme.AddListener(binding.NewDataListener(func() {
+		if themeName, err := prefs.Theme.Get(); err == nil {
+			if newTheme, ok := themes.AvailableThemes()[themeName]; ok {
+				a.Settings().SetTheme(newTheme)
+			}
+		}
+	}))
 
 	// Tray icon support (only works on desktop platforms)
 	if desktopApp, ok := a.(desktop.App); ok {
@@ -186,12 +208,14 @@ func main() {
 	resultsInnerTabs.Append(sprintTab)
 	resultsTab := container.NewTabItem("Results", resultsInnerTabs)
 	outerTabs.Append(resultsTab)
+	prefsContainer := tabs.CreatePreferencesTab()
+	preferencesTab := container.NewTabItem("Preferences", prefsContainer)
+	outerTabs.Append(preferencesTab)
 
 	content := container.NewBorder(topRow, nil, nil, nil, outerTabs)
 	w.SetContent(content)
 	w.Resize(fyne.NewSize(1280, 1024))
 	w.SetFixedSize(true)
-	w.Show()
 
 	// onFlagClicked callback.
 	onFlagClicked := func(round string) {
@@ -449,6 +473,22 @@ func main() {
 			}
 		}
 	}()
+
+	w.SetCloseIntercept(func() {
+		hide, err := prefs.HideOnClose.Get()
+		if err != nil || hide {
+			w.Hide()
+		} else {
+			// If the user prefers to close instead of hiding, close the window and quit the app.
+			w.Close()
+			a.Quit()
+		}
+	})
+
+	startHidden, err := prefs.StartHidden.Get()
+	if err != nil || !startHidden {
+		w.Show()
+	}
 
 	a.Run()
 }

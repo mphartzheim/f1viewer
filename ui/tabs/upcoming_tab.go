@@ -11,6 +11,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	"github.com/mphartzheim/f1viewer/data"
+	"github.com/mphartzheim/f1viewer/userprefs"
+	"github.com/mphartzheim/f1viewer/util"
 )
 
 // CreateUpcomingTab converts an UpcomingResponse into a Fyne table widget.
@@ -82,12 +84,18 @@ func CreateUpcomingTab(upcoming *data.UpcomingResponse) *widget.Table {
 			// Attempt to parse and convert to local time
 			fullTimeStr := fmt.Sprintf("%sT%s", row.Date, row.Time)
 			t, err := time.Parse(time.RFC3339, fullTimeStr)
+			useLocal, _ := userprefs.Get().UseLocalTime.Get()
 			localTime := t.Local()
 			localDateStr := row.Date // fallback
 			localTimeStr := row.Time // fallback
 			if err == nil {
-				localDateStr = localTime.Format("2006-01-02")
-				localTimeStr = localTime.Format("15:04 MST")
+				if useLocal {
+					localDateStr = localTime.Format("2006-01-02")
+					localTimeStr = util.FormatTime(localTime)
+				} else {
+					localDateStr = t.Format("2006-01-02")
+					localTimeStr = util.FormatTime(t)
+				}
 			}
 
 			switch id.Col {
