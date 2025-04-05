@@ -25,7 +25,7 @@ func UpdateRaceResultsTab(season, round string, raceContainer *fyne.Container) {
 	ep := updater.Endpoint{
 		Name: "Race Results",
 		URL:  fmt.Sprintf(data.RaceURL, season, round),
-		Parse: func(b []byte) (interface{}, error) {
+		Parse: func(b []byte) (any, error) {
 			return parser.ParseRaceResultsResponse(b)
 		},
 	}
@@ -52,7 +52,7 @@ func UpdateQualifyingResultsTab(season, round string, qualifyingContainer *fyne.
 	ep := updater.Endpoint{
 		Name: "Qualifying",
 		URL:  fmt.Sprintf(data.QualifyingURL, season, round),
-		Parse: func(b []byte) (interface{}, error) {
+		Parse: func(b []byte) (any, error) {
 			return parser.ParseQualifyingResponse(b)
 		},
 	}
@@ -79,7 +79,7 @@ func UpdateSprintResultsTab(season, round string, sprintContainer *fyne.Containe
 	ep := updater.Endpoint{
 		Name: "Sprint",
 		URL:  fmt.Sprintf(data.SprintURL, season, round),
-		Parse: func(b []byte) (interface{}, error) {
+		Parse: func(b []byte) (any, error) {
 			return parser.ParseSprintResultsResponse(b)
 		},
 	}
@@ -114,7 +114,7 @@ func UpdateDriverStandingsTab(season string, driverContainer *fyne.Container) {
 	ep := updater.Endpoint{
 		Name: "Driver Standings",
 		URL:  fmt.Sprintf(data.DriversStandingsURL, season),
-		Parse: func(b []byte) (interface{}, error) {
+		Parse: func(b []byte) (any, error) {
 			return parser.ParseDriverStandingsResponse(b)
 		},
 	}
@@ -146,7 +146,7 @@ func UpdateConstructorStandingsTab(season string, constructorContainer *fyne.Con
 	ep := updater.Endpoint{
 		Name: "Constructor Standings",
 		URL:  fmt.Sprintf(data.ConstructorsStandingsURL, season),
-		Parse: func(b []byte) (interface{}, error) {
+		Parse: func(b []byte) (any, error) {
 			return parser.ParseConstructorStandingsResponse(b)
 		},
 	}
