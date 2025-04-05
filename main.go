@@ -181,33 +181,61 @@ func main() {
 
 	// Build the outer and inner tab layout.
 	outerTabs := container.NewAppTabs()
+
+	// --- Schedule Tab ---
 	scheduleContainer := container.NewStack(widget.NewLabel("Loading schedule..."))
 	scheduleTab := container.NewTabItem("Schedule", scheduleContainer)
 	outerTabs.Append(scheduleTab)
+
+	// --- Upcoming Tab ---
 	upcomingContainer := container.NewStack(widget.NewLabel("Loading upcoming..."))
 	upcomingTab := container.NewTabItem("Upcoming", upcomingContainer)
 	outerTabs.Append(upcomingTab)
+
+	// --- Standings Tab ---
 	standingsInnerTabs := container.NewAppTabs()
+
+	// Driver Standings Sub-tab
 	driverStandingsContainer := container.NewStack(widget.NewLabel("Loading driver standings..."))
 	driverTab := container.NewTabItem("Driver Standings", driverStandingsContainer)
+
+	// Constructor Standings Sub-tab
 	constructorStandingsContainer := container.NewStack(widget.NewLabel("Loading constructor standings..."))
 	constructorTab := container.NewTabItem("Constructor Standings", constructorStandingsContainer)
+
+	// Add sub-tabs to Standings tab
 	standingsInnerTabs.Append(driverTab)
 	standingsInnerTabs.Append(constructorTab)
+
+	// Add Standings tab to outer tabs
 	standingsTab := container.NewTabItem("Standings", standingsInnerTabs)
 	outerTabs.Append(standingsTab)
+
+	// --- Results Tab ---
 	resultsInnerTabs := container.NewAppTabs()
+
+	// Race Results Sub-tab
 	raceResultsContainer := container.NewStack(widget.NewLabel("Loading race results..."))
 	raceTab := container.NewTabItem("Race", raceResultsContainer)
+
+	// Qualifying Results Sub-tab
 	qualifyingContainer := container.NewStack(widget.NewLabel("Loading qualifying results..."))
 	qualifyingTab := container.NewTabItem("Qualifying", qualifyingContainer)
+
+	// Sprint Results Sub-tab
 	sprintResultsContainer := container.NewStack(widget.NewLabel("Loading sprint results..."))
 	sprintTab := container.NewTabItem("Sprint", sprintResultsContainer)
+
+	// Add sub-tabs to Results tab
 	resultsInnerTabs.Append(raceTab)
 	resultsInnerTabs.Append(qualifyingTab)
 	resultsInnerTabs.Append(sprintTab)
+
+	// Add Results tab to outer tabs
 	resultsTab := container.NewTabItem("Results", resultsInnerTabs)
 	outerTabs.Append(resultsTab)
+
+	// --- Preferences Tab ---
 	prefsContainer := tabs.CreatePreferencesTab()
 	preferencesTab := container.NewTabItem("Preferences", prefsContainer)
 	outerTabs.Append(preferencesTab)
@@ -397,9 +425,7 @@ func main() {
 	}
 
 	fmt.Println("Initial load:")
-	/* updater.LoadEndpoints(endpoints, lastHashes) */
 	updateScheduleTab()
-
 	var wg sync.WaitGroup
 	wg.Add(6)
 	go func() {
