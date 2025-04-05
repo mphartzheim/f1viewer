@@ -277,15 +277,12 @@ func main() {
 	// updateUpcomingTab now determines the next session name.
 	updateUpcomingTab := func() {
 		ep := endpoints[1]
-		epTime := strconv.Itoa(time.Now().Year())
-		ep.URL = fmt.Sprintf(data.UpcomingURL, epTime)
+		ep.URL = fmt.Sprintf(data.UpcomingURL, strconv.Itoa(time.Now().Year()))
 
 		result := updater.FetchEndpoint(ep)
 		if result.Err != nil {
 			fmt.Printf("Upcoming endpoint error: %v\n", result.Err)
-			upcomingContainer.Objects = []fyne.CanvasObject{
-				widget.NewLabel("Failed to load upcoming race data."),
-			}
+			upcomingContainer.Objects = []fyne.CanvasObject{widget.NewLabel("Failed to load upcoming race data.")}
 			upcomingContainer.Refresh()
 			nextSession = time.Time{}
 			nextRaceName, nextSessionName = "", ""
@@ -295,122 +292,78 @@ func main() {
 		upcomingData, ok := result.Data.(*data.UpcomingResponse)
 		if !ok {
 			fmt.Println("Failed to cast upcoming data")
-			upcomingContainer.Objects = []fyne.CanvasObject{
-				widget.NewLabel("No upcoming race data found."),
-			}
+			upcomingContainer.Objects = []fyne.CanvasObject{widget.NewLabel("No upcoming race data found.")}
 			upcomingContainer.Refresh()
 			nextSession = time.Time{}
 			nextRaceName, nextSessionName = "", ""
 			return
 		}
 
-		if len(upcomingData.MRData.RaceTable.Races) > 0 {
-			race := upcomingData.MRData.RaceTable.Races[0]
-			now := time.Now()
-
-			// Create a helper function to parse a date/time pair.
-			parseTimeFunc := func(dateStr, timeStr string) (time.Time, error) {
-				var sessionTimeStr string
-				if strings.HasSuffix(timeStr, "Z") {
-					sessionTimeStr = fmt.Sprintf("%sT%s", dateStr, timeStr)
-				} else {
-					sessionTimeStr = fmt.Sprintf("%sT%sZ", dateStr, timeStr)
-				}
-				return time.Parse(time.RFC3339, sessionTimeStr)
-			}
-
-			// Build a list of candidate sessions.
-			type candidate struct {
-				name string
-				t    time.Time
-			}
-			var candidates []candidate
-
-			// Top-level Race.
-			if race.Time != "" {
-				if t, err := parseTimeFunc(race.Date, race.Time); err == nil {
-					candidates = append(candidates, candidate{"Race", t.Local()})
-				} else {
-					fmt.Printf("Failed to parse Race time: %s, error: %v\n", fmt.Sprintf("%sT%sZ", race.Date, race.Time), err)
-				}
-			}
-			// Practice sessions.
-			if race.Practice1.Time != "" {
-				if t, err := parseTimeFunc(race.Practice1.Date, race.Practice1.Time); err == nil {
-					candidates = append(candidates, candidate{"Practice 1", t.Local()})
-				} else {
-					fmt.Printf("Failed to parse Practice1 time: %s, error: %v\n", fmt.Sprintf("%sT%sZ", race.Practice1.Date, race.Practice1.Time), err)
-				}
-			}
-			if race.Practice2.Time != "" {
-				if t, err := parseTimeFunc(race.Practice2.Date, race.Practice2.Time); err == nil {
-					candidates = append(candidates, candidate{"Practice 2", t.Local()})
-				} else {
-					fmt.Printf("Failed to parse Practice2 time: %s, error: %v\n", fmt.Sprintf("%sT%sZ", race.Practice2.Date, race.Practice2.Time), err)
-				}
-			}
-			if race.Practice3.Time != "" {
-				if t, err := parseTimeFunc(race.Practice3.Date, race.Practice3.Time); err == nil {
-					candidates = append(candidates, candidate{"Practice 3", t.Local()})
-				} else {
-					fmt.Printf("Failed to parse Practice3 time: %s, error: %v\n", fmt.Sprintf("%sT%sZ", race.Practice3.Date, race.Practice3.Time), err)
-				}
-			}
-			// Qualifying.
-			if race.Qualifying.Time != "" {
-				if t, err := parseTimeFunc(race.Qualifying.Date, race.Qualifying.Time); err == nil {
-					candidates = append(candidates, candidate{"Qualifying", t.Local()})
-				} else {
-					fmt.Printf("Failed to parse Qualifying time: %s, error: %v\n", fmt.Sprintf("%sT%sZ", race.Qualifying.Date, race.Qualifying.Time), err)
-				}
-			}
-			// Sprint.
-			if race.Sprint.Time != "" {
-				if t, err := parseTimeFunc(race.Sprint.Date, race.Sprint.Time); err == nil {
-					candidates = append(candidates, candidate{"Sprint", t.Local()})
-				} else {
-					fmt.Printf("Failed to parse Sprint time: %s, error: %v\n", fmt.Sprintf("%sT%sZ", race.Sprint.Date, race.Sprint.Time), err)
-				}
-			}
-
-			// Choose the candidate session that is still in the future with the smallest time difference.
-			var nextCandidate *candidate
-			bestDiff := time.Duration(1<<63 - 1) // a very large duration
-			for _, cand := range candidates {
-				if cand.t.After(now) {
-					diff := cand.t.Sub(now)
-					if diff < bestDiff {
-						bestDiff = diff
-						candCopy := cand
-						nextCandidate = &candCopy
-					}
-				}
-			}
-
-			if nextCandidate != nil {
-				nextSession = nextCandidate.t
-				nextSessionName = nextCandidate.name
-				nextRaceName = race.RaceName
-			} else {
-				nextSession = time.Time{}
-				nextRaceName, nextSessionName = race.RaceName, ""
-			}
-
-			header := widget.NewLabelWithStyle(
-				fmt.Sprintf("Upcoming: %s at %s", race.RaceName, race.Circuit.CircuitName),
-				fyne.TextAlignLeading,
-				fyne.TextStyle{Bold: false},
-			)
-			table := tabs.CreateUpcomingTab(upcomingData)
-			wrapped := container.NewBorder(header, nil, nil, nil, table)
-			upcomingContainer.Objects = []fyne.CanvasObject{wrapped}
-		} else {
-			upcomingContainer.Objects = []fyne.CanvasObject{
-				widget.NewLabel("No upcoming races available."),
-			}
+		races := upcomingData.MRData.RaceTable.Races
+		if len(races) == 0 {
+			upcomingContainer.Objects = []fyne.CanvasObject{widget.NewLabel("No upcoming races available.")}
 			nextSession = time.Time{}
 			nextRaceName, nextSessionName = "", ""
+			w.Canvas().Refresh(upcomingContainer)
+			upcomingContainer.Refresh()
+			return
 		}
+
+		race := races[0]
+		now := time.Now()
+		var candidates []struct {
+			name string
+			t    time.Time
+		}
+
+		add := func(name, dateStr, timeStr string) {
+			if n, t, err := parseSession(name, dateStr, timeStr); err == nil {
+				candidates = append(candidates, struct {
+					name string
+					t    time.Time
+				}{n, t})
+			} else {
+				fmt.Printf("Failed to parse %s time: %v\n", name, err)
+			}
+		}
+
+		add("Race", race.Date, race.Time)
+		add("Practice 1", race.Practice1.Date, race.Practice1.Time)
+		add("Practice 2", race.Practice2.Date, race.Practice2.Time)
+		add("Practice 3", race.Practice3.Date, race.Practice3.Time)
+		add("Qualifying", race.Qualifying.Date, race.Qualifying.Time)
+		add("Sprint", race.Sprint.Date, race.Sprint.Time)
+
+		// Find the closest future session
+		var nextCandidate *struct {
+			name string
+			t    time.Time
+		}
+		bestDiff := time.Duration(1<<63 - 1)
+		for _, cand := range candidates {
+			if cand.t.After(now) {
+				if diff := cand.t.Sub(now); diff < bestDiff {
+					bestDiff = diff
+					nextCandidate = &cand
+				}
+			}
+		}
+
+		if nextCandidate != nil {
+			nextSession = nextCandidate.t
+			nextSessionName = nextCandidate.name
+			nextRaceName = race.RaceName
+		} else {
+			nextSession = time.Time{}
+			nextRaceName, nextSessionName = race.RaceName, ""
+		}
+
+		header := widget.NewLabelWithStyle(
+			fmt.Sprintf("Upcoming: %s at %s", race.RaceName, race.Circuit.CircuitName),
+			fyne.TextAlignLeading, fyne.TextStyle{},
+		)
+		table := tabs.CreateUpcomingTab(upcomingData)
+		upcomingContainer.Objects = []fyne.CanvasObject{container.NewBorder(header, nil, nil, nil, table)}
 
 		w.Canvas().Refresh(upcomingContainer)
 		upcomingContainer.Refresh()
@@ -570,4 +523,20 @@ func updateTabIfChanged(
 
 	updateFn(result.Data)
 	container.Refresh()
+}
+
+// parseSession attempts to parse a date/time pair and returns a valid candidate if successful.
+func parseSession(name, dateStr, timeStr string) (string, time.Time, error) {
+	if timeStr == "" {
+		return "", time.Time{}, fmt.Errorf("no time provided")
+	}
+	if !strings.HasSuffix(timeStr, "Z") {
+		timeStr += "Z"
+	}
+	sessionTimeStr := fmt.Sprintf("%sT%s", dateStr, timeStr)
+	t, err := time.Parse(time.RFC3339, sessionTimeStr)
+	if err != nil {
+		return "", time.Time{}, err
+	}
+	return name, t.Local(), nil
 }
