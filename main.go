@@ -34,49 +34,49 @@ func main() {
 		{
 			Name: "Schedule",
 			URL:  fmt.Sprintf(data.ScheduleURL, "current"),
-			Parse: func(b []byte) (interface{}, error) {
+			Parse: func(b []byte) (any, error) {
 				return parser.ParseScheduleResponse(b)
 			},
 		},
 		{
 			Name: "Upcoming",
 			URL:  fmt.Sprintf(data.UpcomingURL, "current"),
-			Parse: func(b []byte) (interface{}, error) {
+			Parse: func(b []byte) (any, error) {
 				return parser.ParseUpcomingResponse(b)
 			},
 		},
 		{
 			Name: "Driver Standings",
 			URL:  fmt.Sprintf(data.DriversStandingsURL, "current"),
-			Parse: func(b []byte) (interface{}, error) {
+			Parse: func(b []byte) (any, error) {
 				return parser.ParseDriverStandingsResponse(b)
 			},
 		},
 		{
 			Name: "Constructor Standings",
 			URL:  fmt.Sprintf(data.ConstructorsStandingsURL, "current"),
-			Parse: func(b []byte) (interface{}, error) {
+			Parse: func(b []byte) (any, error) {
 				return parser.ParseConstructorStandingsResponse(b)
 			},
 		},
 		{
 			Name: "Race Results",
 			URL:  fmt.Sprintf(data.RaceURL, "current", "last"),
-			Parse: func(b []byte) (interface{}, error) {
+			Parse: func(b []byte) (any, error) {
 				return parser.ParseRaceResultsResponse(b)
 			},
 		},
 		{
 			Name: "Qualifying",
 			URL:  fmt.Sprintf(data.QualifyingURL, "current", "last"),
-			Parse: func(b []byte) (interface{}, error) {
+			Parse: func(b []byte) (any, error) {
 				return parser.ParseQualifyingResponse(b)
 			},
 		},
 		{
 			Name: "Sprint Results",
 			URL:  fmt.Sprintf(data.SprintURL, "current", "last"),
-			Parse: func(b []byte) (interface{}, error) {
+			Parse: func(b []byte) (any, error) {
 				return parser.ParseSprintResultsResponse(b)
 			},
 		},
