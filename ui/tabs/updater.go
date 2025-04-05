@@ -129,7 +129,7 @@ func UpdateDriverStandingsTab(season string, driverContainer *fyne.Container) {
 	}
 	table := CreateDriverStandingsTab(r)
 	header := widget.NewLabelWithStyle(
-		fmt.Sprintf("Driver Standings – %s", season),
+		fmt.Sprintf("%s Driver Standings", season),
 		fyne.TextAlignLeading,
 		fyne.TextStyle{Bold: false},
 	)
@@ -161,7 +161,7 @@ func UpdateConstructorStandingsTab(season string, constructorContainer *fyne.Con
 	}
 	table := CreateConstructorStandingsTab(r)
 	header := widget.NewLabelWithStyle(
-		fmt.Sprintf("Constructor Standings – %s", season),
+		fmt.Sprintf("%s Constructor Standings", season),
 		fyne.TextAlignLeading,
 		fyne.TextStyle{Bold: false},
 	)
