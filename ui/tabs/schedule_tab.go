@@ -53,7 +53,7 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 
 			if id.Row == 0 {
 				// Header row
-				headers := []string{"Round", "Race", "Date", "Time", "Circuit", "Location"}
+				headers := []string{"Round", "Race", "Circuit", "Location", "Date"}
 				updateCell(widget.NewLabel(headers[id.Col]))
 				return
 			}
@@ -67,7 +67,7 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 			case 0:
 				roundLabel := race.Round
 				if isNext {
-					roundLabel += " (next)"
+					roundLabel = "Next"
 				}
 				text := canvas.NewText(roundLabel, nil)
 				if isNext {
