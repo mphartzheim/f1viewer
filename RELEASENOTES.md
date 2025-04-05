@@ -1,29 +1,68 @@
-## [v1.0.32]
+## [v1.1.0]
 
 
 ### Chore
 
 
-- clean appimage when building
+- sort imports to place fyne.io imports above other imports for consistency
 
-- still testing cliff changelogs
+- replace 'interface{}' with 'any'
 
-- still gesting git-cliff out
+- found more instances of interface{} to replace with any
+
+- remove unused hashBytes func
+
+
+
+### Docs
+
+
+- add inline comments to improve code readability
+
+
+
+### Feat
+
+
+- new countdown timer to next session
+
+- initial support for themes
+
+- initial preferences framework
+
+- add updateTabIfChanged to conditionally refresh UI on hash change
+
+- highlight next race row with primary text color
+
+- add spoiler button to current race to show results
 
 
 
 ### Fix
 
 
-- pass version to git-cliff to enable sectioned changelog
+- delay setting tray icon for Windows
 
-- prevent crash on empty release notes
+- load Upcoming Tab on load rather than on click
 
-- correct RELEASENOTES.md extraction using sed instead of awk
+- correct remnants from old "F1Tray" application
 
-- prevent double 'v' in version headings
+- conditionally hide sprint header on non-sprint events
+
+- remove redundant bulk endpoint load on launch
+
+- headers on schedule table were incorrect
+
+- prevent table cell renderer crash by wrapping canvas text
+
+
+
+### Refactor
+
+
+- export ColoredText widget and constructor
 
 
 
 
-## [v1.0.31]
+## [v1.0.32]
