@@ -1,7 +1,12 @@
 package util
 
 import (
+	"image/color"
 	"time"
+
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/widget"
 
 	"github.com/mphartzheim/f1viewer/userprefs"
 )
@@ -15,4 +20,25 @@ func FormatTime(t time.Time) string {
 	}
 	// Otherwise, use 12-hour format.
 	return t.Format("3:04 PM MST")
+}
+
+// ColoredText is a simple widget that displays text in a specific color.
+type ColoredText struct {
+	widget.BaseWidget
+	Text *canvas.Text
+}
+
+// NewColoredText creates a new ColoredText widget.
+func NewColoredText(textStr string, col color.Color) *ColoredText {
+	ct := &ColoredText{
+		Text: canvas.NewText(textStr, col),
+	}
+	ct.ExtendBaseWidget(ct)
+	return ct
+}
+
+// CreateRenderer implements the fyne.Widget interface.
+func (ct *ColoredText) CreateRenderer() fyne.WidgetRenderer {
+	// Use a simple renderer that just displays our canvas.Text.
+	return widget.NewSimpleRenderer(ct.Text)
 }

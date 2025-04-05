@@ -2,17 +2,16 @@ package tabs
 
 import (
 	"fmt"
-	"image/color"
 	"net/url"
 	"time"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
 	"github.com/mphartzheim/f1viewer/data"
+	"github.com/mphartzheim/f1viewer/util"
 )
 
 // CreateScheduleTab converts a *data.ScheduleResponse into a Fyne table widget.
@@ -75,9 +74,9 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 				if isNext {
 					col = primaryColor
 				}
-				ct := newColoredText(roundLabel, col)
-				ct.text.TextStyle = fyne.TextStyle{}
-				ct.text.Alignment = fyne.TextAlignLeading
+				ct := util.NewColoredText(roundLabel, col)
+				ct.Text.TextStyle = fyne.TextStyle{}
+				ct.Text.Alignment = fyne.TextAlignLeading
 				updateCell(ct)
 
 			case 1:
@@ -109,11 +108,11 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 					// Fallback: plain text with optional Spoilers button for next race.
 					var txt fyne.CanvasObject
 					if isNext {
-						txt = newColoredText(race.RaceName, primaryColor)
+						txt = util.NewColoredText(race.RaceName, primaryColor)
 					} else {
-						txt = newColoredText(race.RaceName, theme.ForegroundColor())
+						txt = util.NewColoredText(race.RaceName, theme.ForegroundColor())
 					}
-					txt.(*coloredText).text.Alignment = fyne.TextAlignLeading
+					txt.(*util.ColoredText).Text.Alignment = fyne.TextAlignLeading
 
 					if isNext {
 						spoilersButton := widget.NewButton("Spoilers", func() {
@@ -138,8 +137,8 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 					if isNext {
 						col = primaryColor
 					}
-					ct := newColoredText(race.Circuit.CircuitName, col)
-					ct.text.Alignment = fyne.TextAlignLeading
+					ct := util.NewColoredText(race.Circuit.CircuitName, col)
+					ct.Text.Alignment = fyne.TextAlignLeading
 					circuitCell = ct
 				}
 				items := []fyne.CanvasObject{circuitCell}
@@ -165,8 +164,8 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 				if isNext {
 					col = primaryColor
 				}
-				ct := newColoredText(label, col)
-				ct.text.Alignment = fyne.TextAlignLeading
+				ct := util.NewColoredText(label, col)
+				ct.Text.Alignment = fyne.TextAlignLeading
 				updateCell(ct)
 
 			case 4:
@@ -174,8 +173,8 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 				if isNext {
 					col = primaryColor
 				}
-				ct := newColoredText(race.Date, col)
-				ct.text.Alignment = fyne.TextAlignLeading
+				ct := util.NewColoredText(race.Date, col)
+				ct.Text.Alignment = fyne.TextAlignLeading
 				updateCell(ct)
 
 			default:
@@ -194,23 +193,4 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 	table.Resize(fyne.NewSize(820, float32((len(races)+1)*30)))
 
 	return table
-}
-
-// coloredText is a simple widget that displays text in a specific color.
-type coloredText struct {
-	widget.BaseWidget
-	text *canvas.Text
-}
-
-func newColoredText(textStr string, col color.Color) *coloredText {
-	ct := &coloredText{
-		text: canvas.NewText(textStr, col),
-	}
-	ct.ExtendBaseWidget(ct)
-	return ct
-}
-
-func (ct *coloredText) CreateRenderer() fyne.WidgetRenderer {
-	// Use a simple renderer that just displays our canvas.Text.
-	return widget.NewSimpleRenderer(ct.text)
 }
