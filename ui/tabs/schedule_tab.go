@@ -82,48 +82,49 @@ func CreateScheduleTab(schedule *data.ScheduleResponse, onFlagClicked func(round
 			case 1:
 				u, err := url.Parse(race.URL)
 				var raceCell fyne.CanvasObject
-				if err == nil && u != nil {
-					hl := widget.NewHyperlink(race.RaceName, u) // leave hyperlink styling intact
-					var extra fyne.CanvasObject
-					if isNext {
-						extra = widget.NewButton("Spoilers", func() {
-							onFlagClicked(race.Round)
-						})
-						extra.(*widget.Button).Importance = widget.LowImportance
-					} else if race.Date != "" && race.Time != "" {
-						fullTimeStr := fmt.Sprintf("%sT%s", race.Date, race.Time)
-						if t, err := time.Parse(time.RFC3339, fullTimeStr); err == nil && t.Before(now) {
-							extra = widget.NewButton("🏁", func() {
-								onFlagClicked(race.Round)
-							})
-							extra.(*widget.Button).Importance = widget.LowImportance
-						} else {
-							extra = widget.NewLabel("\u200B")
-						}
-					} else {
-						extra = widget.NewLabel("\u200B")
-					}
-					raceCell = container.NewHBox(hl, extra)
-				} else {
-					// Fallback: plain text with optional Spoilers button for next race.
-					var txt fyne.CanvasObject
-					if isNext {
-						txt = util.NewColoredText(race.RaceName, primaryColor)
-					} else {
-						txt = util.NewColoredText(race.RaceName, theme.ForegroundColor())
-					}
-					txt.(*util.ColoredText).Text.Alignment = fyne.TextAlignLeading
 
+				// Build the race label (hyperlink or plain text fallback)
+				var raceLabel fyne.CanvasObject
+				if err == nil && u != nil {
+					raceLabel = widget.NewHyperlink(race.RaceName, u)
+				} else {
+					col := theme.ForegroundColor()
 					if isNext {
-						spoilersButton := widget.NewButton("Spoilers", func() {
+						col = primaryColor
+					}
+					ct := util.NewColoredText(race.RaceName, col)
+					ct.Text.Alignment = fyne.TextAlignLeading
+					raceLabel = ct
+				}
+
+				var extra fyne.CanvasObject = widget.NewLabel("\u200B") // default spacer
+				raceTimeValid := race.Date != "" && race.Time != ""
+
+				// 🏁 Flag button if race has ended
+				if raceTimeValid {
+					fullRaceTime := fmt.Sprintf("%sT%s", race.Date, race.Time)
+					if t, err := time.Parse(time.RFC3339, fullRaceTime); err == nil && t.Before(now) {
+						flag := widget.NewButton("🏁", func() {
 							onFlagClicked(race.Round)
 						})
-						spoilersButton.Importance = widget.LowImportance
-						raceCell = container.NewHBox(txt, spoilersButton)
-					} else {
-						raceCell = txt
+						flag.Importance = widget.LowImportance
+						extra = flag
 					}
 				}
+
+				// 🕵️ Spoilers button if next race AND qualifying has started
+				if isNext && race.Qualifying != nil && race.Qualifying.Date != "" && race.Qualifying.Time != "" {
+					fullQualTime := fmt.Sprintf("%sT%s", race.Qualifying.Date, race.Qualifying.Time)
+					if qt, err := time.Parse(time.RFC3339, fullQualTime); err == nil && qt.Before(now) {
+						spoilers := widget.NewButton("Spoilers", func() {
+							onFlagClicked(race.Round)
+						})
+						spoilers.Importance = widget.LowImportance
+						extra = spoilers
+					}
+				}
+
+				raceCell = container.NewHBox(raceLabel, extra)
 				updateCell(raceCell)
 
 			case 2:

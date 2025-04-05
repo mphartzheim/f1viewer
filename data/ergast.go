@@ -23,13 +23,24 @@ type RaceTable struct {
 
 // Race represents a single race in the schedule.
 type Race struct {
-	Season   string  `json:"season"`
-	Round    string  `json:"round"`
-	URL      string  `json:"url"`
-	RaceName string  `json:"raceName"`
-	Circuit  Circuit `json:"Circuit"`
-	Date     string  `json:"date"`
-	Time     string  `json:"time,omitempty"`
+	Season         string   `json:"season"`
+	Round          string   `json:"round"`
+	URL            string   `json:"url"`
+	RaceName       string   `json:"raceName"`
+	Circuit        Circuit  `json:"Circuit"`
+	Date           string   `json:"date"`
+	Time           string   `json:"time,omitempty"`
+	FirstPractice  *Session `json:"FirstPractice,omitempty"`
+	SecondPractice *Session `json:"SecondPractice,omitempty"`
+	ThirdPractice  *Session `json:"ThirdPractice,omitempty"`
+	Qualifying     *Session `json:"Qualifying,omitempty"`
+	Sprint         *Session `json:"Sprint,omitempty"`
+}
+
+// Session holds date and time information for a session like Practice, Qualifying, etc.
+type Session struct {
+	Date string `json:"date"`
+	Time string `json:"time,omitempty"`
 }
 
 // Circuit represents the race circuit details.
