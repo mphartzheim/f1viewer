@@ -291,6 +291,7 @@ func main() {
 		}
 
 		upcomingData, ok := result.Data.(*data.UpcomingResponse)
+		data.SetUpcomingCached(upcomingData) // ✅ cache for reactive refreshes
 		if !ok {
 			fmt.Println("Failed to cast upcoming data")
 			upcomingContainer.Objects = []fyne.CanvasObject{widget.NewLabel("No upcoming race data found.")}
@@ -462,18 +463,21 @@ func main() {
 		}
 	}()
 
-	// Refresh the Upcoming tab every 60 seconds.
-	go func() {
-		ticker := time.NewTicker(60 * time.Second)
-		defer ticker.Stop()
-		for range ticker.C {
-			current := outerTabs.Selected()
-			if current != nil && current.Text == "Upcoming" {
-				fmt.Println("Refreshing Upcoming tab...")
-				updateUpcomingTab()
-			}
+	userprefs.Get().UseFahrenheit.AddListener(binding.NewDataListener(func() {
+		upcomingData := data.GetUpcomingCached()
+		if upcomingData != nil {
+			table := tabs.CreateUpcomingTab(upcomingData)
+
+			header := widget.NewLabelWithStyle(
+				fmt.Sprintf("Upcoming: %s at %s", upcomingData.MRData.RaceTable.Races[0].RaceName, upcomingData.MRData.RaceTable.Races[0].Circuit.CircuitName),
+				fyne.TextAlignLeading, fyne.TextStyle{},
+			)
+
+			upcomingContainer.Objects = []fyne.CanvasObject{container.NewBorder(header, nil, nil, nil, table)}
+			w.Canvas().Refresh(upcomingContainer)
+			upcomingContainer.Refresh()
 		}
-	}()
+	}))
 
 	w.SetCloseIntercept(func() {
 		hide, err := prefs.HideOnClose.Get()
